@@ -1,0 +1,27 @@
+# Simulator outputs
+simv*
+csrc/
+*.daidir/
+*.vpd
+*.vcd
+*.fsdb
+*.wlf
+*.log
+*.key
+ucli.key
+DVEfiles/
+verdiLog/
+
+# FPGA tool outputs
+.Xil/
+*.runs/
+*.cache/
+*.gen/
+*.hw/
+*.ip_user_files/
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+*~
+
