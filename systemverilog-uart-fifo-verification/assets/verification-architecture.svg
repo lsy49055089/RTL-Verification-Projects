@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="820" viewBox="0 0 1000 820" role="img" aria-labelledby="title desc">
+  <title id="title">SystemVerilog class-based verification architecture</title>
+  <desc id="desc">Generator and Driver stimulate the DUT through an interface. Monitor samples the DUT and Scoreboard checks the results. Mailboxes and an event connect the components.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#334155"/>
+    </marker>
+    <style>
+      .title { font: 700 26px Arial, sans-serif; fill: #0f172a; }
+      .label { font: 700 22px Arial, sans-serif; fill: #0f172a; }
+      .sub { font: 16px Arial, sans-serif; fill: #334155; }
+      .small { font: 700 15px Arial, sans-serif; fill: #475569; }
+      .line { stroke: #334155; stroke-width: 3; fill: none; marker-end: url(#arrow); }
+    </style>
+  </defs>
+
+  <rect x="18" y="18" width="964" height="784" rx="30" fill="#ffffff" stroke="#475569" stroke-width="3"/>
+  <text x="500" y="58" text-anchor="middle" class="title">Class-Based SystemVerilog Verification</text>
+
+  <rect x="80" y="90" width="290" height="125" rx="18" fill="#f0fdf4" stroke="#65a30d" stroke-width="3"/>
+  <text x="225" y="140" text-anchor="middle" class="label">Generator</text>
+  <text x="225" y="176" text-anchor="middle" class="sub">Random transaction creation</text>
+
+  <rect x="630" y="90" width="290" height="125" rx="18" fill="#eff6ff" stroke="#2563eb" stroke-width="3"/>
+  <text x="775" y="140" text-anchor="middle" class="label">Scoreboard</text>
+  <text x="775" y="176" text-anchor="middle" class="sub">Reference comparison · PASS / FAIL</text>
+
+  <rect x="135" y="250" width="180" height="64" rx="14" fill="#eff6ff" stroke="#60a5fa" stroke-width="3"/>
+  <text x="225" y="278" text-anchor="middle" class="small">gen2drv</text>
+  <text x="225" y="299" text-anchor="middle" class="sub">typed mailbox</text>
+
+  <rect x="685" y="250" width="180" height="64" rx="14" fill="#eff6ff" stroke="#60a5fa" stroke-width="3"/>
+  <text x="775" y="278" text-anchor="middle" class="small">mon2scb</text>
+  <text x="775" y="299" text-anchor="middle" class="sub">typed mailbox</text>
+
+  <rect x="80" y="355" width="290" height="135" rx="18" fill="#fff7ed" stroke="#f59e0b" stroke-width="3"/>
+  <text x="225" y="407" text-anchor="middle" class="label">Driver</text>
+  <text x="225" y="441" text-anchor="middle" class="sub">Transaction → DUT input signals</text>
+  <text x="225" y="468" text-anchor="middle" class="sub">UART frame / FIFO controls</text>
+
+  <rect x="630" y="355" width="290" height="135" rx="18" fill="#faf5ff" stroke="#9333ea" stroke-width="3"/>
+  <text x="775" y="407" text-anchor="middle" class="label">Monitor</text>
+  <text x="775" y="441" text-anchor="middle" class="sub">Sample interface and DUT state</text>
+  <text x="775" y="468" text-anchor="middle" class="sub">Signals → transaction</text>
+
+  <rect x="80" y="555" width="840" height="82" rx="18" fill="#faf5ff" stroke="#8b5cf6" stroke-width="3"/>
+  <text x="500" y="588" text-anchor="middle" class="label">Virtual Interface</text>
+  <text x="500" y="616" text-anchor="middle" class="sub">Connects class-based testbench components to RTL signals</text>
+
+  <rect x="80" y="690" width="840" height="76" rx="18" fill="#f0fdf4" stroke="#16a34a" stroke-width="3"/>
+  <text x="500" y="724" text-anchor="middle" class="label">DUT</text>
+  <text x="500" y="751" text-anchor="middle" class="sub">UART RX/TX · RX FIFO · TX FIFO · Odd Parity</text>
+
+  <path d="M225 215 L225 250" class="line"/>
+  <path d="M225 314 L225 355" class="line"/>
+  <path d="M225 490 L225 555" class="line"/>
+  <path d="M775 555 L775 490" class="line"/>
+  <path d="M775 355 L775 314" class="line"/>
+  <path d="M775 250 L775 215" class="line"/>
+  <path d="M380 690 L380 637" class="line"/>
+  <path d="M620 637 L620 690" class="line"/>
+
+  <path d="M630 420 L500 420 L500 150 L378 150" class="line"/>
+  <text x="505" y="139" text-anchor="middle" class="small">event_gen_next</text>
+</svg>
