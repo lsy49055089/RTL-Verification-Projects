@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" role="img" aria-labelledby="title desc">
+  <title id="title">SPI and I2C UVM verification architecture</title>
+  <desc id="desc">Transactions flow from test and sequence through driver to the DUT. Monitor observations feed scoreboard checks and I2C functional coverage.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#45627a"/>
+    </marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#17324d" flood-opacity="0.14"/>
+    </filter>
+    <style>
+      .title { font: 700 30px Arial, sans-serif; fill: #17324d; }
+      .subtitle { font: 400 15px Arial, sans-serif; fill: #587083; }
+      .section { font: 700 18px Arial, sans-serif; fill: #17324d; }
+      .label { font: 700 17px Arial, sans-serif; fill: #17324d; }
+      .small { font: 400 14px Arial, sans-serif; fill: #587083; }
+      .arrow { stroke: #45627a; stroke-width: 2.5; fill: none; marker-end: url(#arrow); }
+      .dashed { stroke-dasharray: 8 6; }
+    </style>
+  </defs>
+
+  <rect width="1200" height="620" rx="24" fill="#f7fafc"/>
+  <text x="60" y="58" class="title">SPI &amp; I2C UVM Verification</text>
+  <text x="60" y="86" class="subtitle">Reusable stimulus, protocol-aware monitoring, automated checking and coverage</text>
+
+  <rect x="40" y="120" width="1120" height="190" rx="20" fill="#eaf2fb" stroke="#bfd1e3"/>
+  <text x="66" y="151" class="section">UVM stimulus path</text>
+
+  <g filter="url(#shadow)">
+    <rect x="75" y="185" width="165" height="78" rx="14" fill="#ffffff" stroke="#8eb4d6"/>
+    <rect x="285" y="185" width="180" height="78" rx="14" fill="#ffffff" stroke="#8eb4d6"/>
+    <rect x="510" y="185" width="165" height="78" rx="14" fill="#ffffff" stroke="#8eb4d6"/>
+    <rect x="720" y="175" width="205" height="98" rx="14" fill="#fff7e8" stroke="#e7b565"/>
+    <rect x="970" y="185" width="155" height="78" rx="14" fill="#ffffff" stroke="#8eb4d6"/>
+  </g>
+  <text x="157" y="218" text-anchor="middle" class="label">Test</text>
+  <text x="157" y="241" text-anchor="middle" class="small">objection / factory</text>
+  <text x="375" y="218" text-anchor="middle" class="label">Sequence</text>
+  <text x="375" y="241" text-anchor="middle" class="small">directed + random</text>
+  <text x="592" y="218" text-anchor="middle" class="label">Sequencer</text>
+  <text x="592" y="241" text-anchor="middle" class="small">transaction arbitration</text>
+  <text x="822" y="211" text-anchor="middle" class="label">Driver</text>
+  <text x="822" y="235" text-anchor="middle" class="small">SPI bytes</text>
+  <text x="822" y="254" text-anchor="middle" class="small">I2C commands</text>
+  <text x="1047" y="218" text-anchor="middle" class="label">DUT</text>
+  <text x="1047" y="241" text-anchor="middle" class="small">Master + Slave RTL</text>
+
+  <path d="M240 224 H285" class="arrow"/>
+  <path d="M465 224 H510" class="arrow"/>
+  <path d="M675 224 H720" class="arrow"/>
+  <path d="M925 224 H970" class="arrow"/>
+
+  <rect x="40" y="340" width="1120" height="230" rx="20" fill="#eef8f4" stroke="#b9d8cc"/>
+  <text x="66" y="371" class="section">Observation and checking path</text>
+
+  <g filter="url(#shadow)">
+    <rect x="970" y="413" width="155" height="90" rx="14" fill="#ffffff" stroke="#72b29e"/>
+    <rect x="710" y="413" width="205" height="90" rx="14" fill="#ffffff" stroke="#72b29e"/>
+    <rect x="415" y="405" width="240" height="106" rx="14" fill="#e8f7ef" stroke="#55a485"/>
+    <rect x="105" y="405" width="245" height="106" rx="14" fill="#f4ecfb" stroke="#a982c8"/>
+  </g>
+  <text x="1047" y="448" text-anchor="middle" class="label">Interface</text>
+  <text x="1047" y="472" text-anchor="middle" class="small">signals + status</text>
+  <text x="812" y="448" text-anchor="middle" class="label">Monitor</text>
+  <text x="812" y="472" text-anchor="middle" class="small">reconstruct transaction</text>
+  <text x="535" y="440" text-anchor="middle" class="label">Scoreboard</text>
+  <text x="535" y="465" text-anchor="middle" class="small">MOSI/MISO · ACK/NACK</text>
+  <text x="535" y="486" text-anchor="middle" class="small">data · busy/done</text>
+  <text x="227" y="440" text-anchor="middle" class="label">I2C Coverage</text>
+  <text x="227" y="465" text-anchor="middle" class="small">address · R/W · data</text>
+  <text x="227" y="486" text-anchor="middle" class="small">ACK × R/W cross</text>
+
+  <path d="M970 458 H915" class="arrow"/>
+  <path d="M710 458 H655" class="arrow"/>
+  <path d="M710 480 C610 550 430 550 350 485" class="arrow dashed"/>
+  <path d="M1047 273 V413" class="arrow dashed"/>
+
+  <text x="60" y="602" class="small">SPI: 8 directed + 30 random transfers · I2C: write, read, write-read and wrong-address scenarios</text>
+</svg>
+
