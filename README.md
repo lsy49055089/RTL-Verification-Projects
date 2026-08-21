@@ -6,7 +6,7 @@ SystemVerilog 기반 RTL 기능 검증 프로젝트와 학습 결과를 정리�
 
 | Project | Verification Target | Key Techniques |
 |---|---|---|
-| [UART + FIFO + Parity Verification](./systemverilog-uart-fifo-verification) | UART RX/TX, dual FIFO, Odd Parity, error blocking | Class-based TB, mailbox, virtual interface, random stimulus, scoreboard |
+| [UART + FIFO + Parity Verification](https://github.com/lsy49055089/ondevice-verification/tree/main/systemverilog-uart-fifo-verification) | UART RX/TX, dual FIFO, Odd Parity, error blocking | Class-based TB, mailbox, virtual interface, random stimulus, scoreboard |
 
 ## Implemented Techniques
 
