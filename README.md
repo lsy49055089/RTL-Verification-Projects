@@ -4,6 +4,8 @@ SystemVerilog와 UVM을 사용해 RTL 기능과 프로토콜 동작을 검증한
 
 **Portfolio focus:** self-checking testbench · UVM · scoreboard · functional coverage
 
+[![Verification RTL CI](https://github.com/lsy49055089/RTL-Verification-Projects/actions/workflows/rtl-ci.yml/badge.svg)](https://github.com/lsy49055089/RTL-Verification-Projects/actions/workflows/rtl-ci.yml)
+
 > **Related Conference Paper Verification:** [Parallel Decision Tree Hardware](https://github.com/lsy49055089/Parallel-Decision-Tree-Hardware) — 37개 벡터 전수 분류, DONE-state assertion, 6-state/4-state 결과 동등성과 batch cycle을 자동 비교합니다.
 
 ## Projects
