@@ -2,6 +2,8 @@
 
 SystemVerilog와 UVM을 사용해 RTL 기능과 프로토콜 동작을 검증한 프로젝트를 정리한 포트폴리오 저장소입니다.
 
+**Portfolio focus:** self-checking testbench · UVM · scoreboard · functional coverage
+
 > **Related Conference Paper Verification:** [Parallel Decision Tree Hardware](https://github.com/lsy49055089/Parallel-Decision-Tree-Hardware) — 37개 벡터 전수 분류, DONE-state assertion, 6-state/4-state 결과 동등성과 batch cycle을 자동 비교합니다.
 
 ## Projects
@@ -29,3 +31,10 @@ SystemVerilog와 UVM을 사용해 RTL 기능과 프로토콜 동작을 검증한
 - Reset immediate assertion 및 waveform timing 분석
 
 각 프로젝트 폴더에는 DUT, testbench, 검증 시나리오, 결과와 재현 시 주의사항을 정리했습니다.
+
+
+---
+
+## Portfolio Navigation
+
+[Conference Paper](https://github.com/lsy49055089/Parallel-Decision-Tree-Hardware) · [RTL / FPGA Design](https://github.com/lsy49055089/RTL-Design-Projects) · [Design Verification](https://github.com/lsy49055089/RTL-Verification-Projects) · [Embedded Systems](https://github.com/lsy49055089/Embedded-Systems-Projects) · [Edge AI / CV](https://github.com/lsy49055089/AI-Projects)
