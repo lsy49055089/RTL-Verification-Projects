@@ -33,6 +33,16 @@ SystemVerilog와 UVM을 사용해 RTL 기능과 프로토콜 동작을 검증한
 각 프로젝트 폴더에는 DUT, testbench, 검증 시나리오, 결과와 재현 시 주의사항을 정리했습니다.
 
 
+## Continuous Integration
+
+GitHub Actions에서 Icarus Verilog로 SPI, I2C, UART/FIFO DUT의 SystemVerilog elaboration을 자동 검사합니다.
+
+```bash
+bash scripts/check_rtl.sh
+```
+
+> 공개 Runner의 CI는 합성 가능한 DUT 구문·연결을 확인합니다. UVM 1.2 시나리오와 Coverage 결과는 VCS 환경에서 수행한 검증 결과와 분리해 표기합니다.
+
 ---
 
 ## Portfolio Navigation
