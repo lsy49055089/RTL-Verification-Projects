@@ -1,4 +1,4 @@
-# RTL Verification Projects
+# Design Verification Projects
 
 SystemVerilog와 UVM을 사용해 RTL 기능과 프로토콜 동작을 검증한 프로젝트를 정리한 포트폴리오 저장소입니다.
 
