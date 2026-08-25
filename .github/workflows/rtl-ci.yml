@@ -1,0 +1,31 @@
+name: Verification RTL CI
+
+on:
+  push:
+    paths:
+      - "uvm-spi-i2c-verification/rtl/**"
+      - "systemverilog-uart-fifo-verification/dut/**"
+      - "scripts/check_rtl.sh"
+      - ".github/workflows/rtl-ci.yml"
+  pull_request:
+    paths:
+      - "uvm-spi-i2c-verification/rtl/**"
+      - "systemverilog-uart-fifo-verification/dut/**"
+      - "scripts/check_rtl.sh"
+      - ".github/workflows/rtl-ci.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  elaborate-dut:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Icarus Verilog
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y iverilog
+      - name: Elaborate verification DUTs
+        run: bash scripts/check_rtl.sh
