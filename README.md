@@ -17,6 +17,8 @@ SystemVerilog와 UVM을 사용해 RTL 기능과 프로토콜 동작을 검증한
 
 ## Verified Results
 
+아래 수치는 제출 당시 보고서에 기록된 결과이며, 현재 GitHub Actions에서 UVM 테스트를 다시 실행한 결과는 아닙니다.
+
 - **SPI UVM:** 38 PASS / 0 FAIL
 - **I2C UVM:** 7 PASS / 0 FAIL
 - **UART/FIFO:** random stimulus, parity-error injection, reference queue 기반 자동 비교
@@ -44,6 +46,14 @@ bash scripts/check_rtl.sh
 ```
 
 > 공개 Runner의 CI는 합성 가능한 DUT 구문·연결을 확인합니다. UVM 1.2 시나리오와 Coverage 결과는 VCS 환경에서 수행한 검증 결과와 분리해 표기합니다.
+
+| Evidence | 확인할 수 있는 범위 |
+|---|---|
+| [SPI/I2C 검증 시나리오와 실행 명령](./uvm-spi-i2c-verification#run) | 공개된 DUT·UVM TB를 VCS/UVM 1.2 환경에서 실행하는 방법 |
+| [UART/FIFO Simulation Sets](./systemverilog-uart-fifo-verification#simulation-sets) | FIFO, UART, 통합 Loopback의 개별 컴파일 구성 |
+| [CI 실행 기록](https://github.com/lsy49055089/RTL-Verification-Projects/actions/workflows/rtl-ci.yml) | SPI·I2C·UART/FIFO DUT의 elaboration 성공 여부 |
+
+원본 UVM 실행 로그와 Coverage database는 현재 공개 저장소에 포함되지 않았습니다. 따라서 CI 배지를 전체 UVM 시나리오나 Coverage 목표의 통과 근거로 사용하지 않습니다.
 
 ---
 
