@@ -38,29 +38,11 @@ interface i2c_if(input logic clk);
         output slave_addr;
         output slave_tx_data;
 
-        input master_done;
-        input master_busy;
-        input slave_done;
-        input slave_busy;
-    endclocking
-
-    clocking mon_cb @(posedge clk);
-        input reset;
-        input cmd_start;
-        input cmd_write;
-        input cmd_read;
-        input cmd_stop;
-
-        input master_tx_data;
         input master_rx_data;
-        input ack_in;
+        input slave_rx_data;
         input ack_out;
         input master_done;
         input master_busy;
-
-        input slave_addr;
-        input slave_tx_data;
-        input slave_rx_data;
         input slave_addr_match;
         input slave_rw_mode;
         input slave_master_ack;
@@ -144,7 +126,6 @@ package i2c_pkg;
         task do_write(logic [6:0] addr, logic [7:0] data);
             i2c_seq_item item;
             item = i2c_seq_item::type_id::create("item");
-
             start_item(item);
             item.op            = i2c_seq_item::I2C_WRITE;
             item.slave_addr    = addr;
@@ -157,7 +138,6 @@ package i2c_pkg;
         task do_read(logic [6:0] addr, logic [7:0] data);
             i2c_seq_item item;
             item = i2c_seq_item::type_id::create("item");
-
             start_item(item);
             item.op            = i2c_seq_item::I2C_READ;
             item.slave_addr    = addr;
@@ -170,7 +150,6 @@ package i2c_pkg;
         task do_wr_rd(logic [6:0] addr, logic [7:0] wdata, logic [7:0] rdata);
             i2c_seq_item item;
             item = i2c_seq_item::type_id::create("item");
-
             start_item(item);
             item.op            = i2c_seq_item::I2C_WR_RD;
             item.slave_addr    = addr;
@@ -183,7 +162,6 @@ package i2c_pkg;
         task do_wrong_addr(logic [6:0] addr, logic [6:0] wrong);
             i2c_seq_item item;
             item = i2c_seq_item::type_id::create("item");
-
             start_item(item);
             item.op            = i2c_seq_item::I2C_WRONG_ADDR;
             item.slave_addr    = addr;
@@ -203,16 +181,67 @@ package i2c_pkg;
             super.new(name);
         endfunction
 
-        task body();
-            `uvm_info(get_type_name(), "I2C basic sequence start", UVM_LOW)
+        // task body();
+        //     `uvm_info(get_type_name(), "I2C basic sequence start", UVM_LOW)
+        //     do_write(7'h50, 8'hA5);
+        //     do_read (7'h50, 8'h3C);
+        //     do_wr_rd(7'h50, 8'h5A, 8'hC3);
+        //     do_wrong_addr(7'h50, 7'h51);
+        //     `uvm_info(get_type_name(), "I2C basic sequence end", UVM_LOW)
+        // endtask
 
+
+        task body();
+            i2c_seq_item item;
+
+            `uvm_info(get_type_name(), "I2C sequence start", UVM_LOW)
+
+            // Directed Test: 4 transactions
             do_write(7'h50, 8'hA5);
-            do_read (7'h50, 8'h3C);
+            do_read(7'h50, 8'h3C);
             do_wr_rd(7'h50, 8'h5A, 8'hC3);
             do_wrong_addr(7'h50, 7'h51);
 
-            `uvm_info(get_type_name(), "I2C basic sequence end", UVM_LOW)
+            // Random Test: 4 operations per round
+            repeat (2499) begin
+
+                item = i2c_seq_item::type_id::create("rand_write");
+                start_item(item);
+                if (!item.randomize() with {
+                    op == i2c_seq_item::I2C_WRITE;
+                })
+                    `uvm_fatal("RAND", "WRITE randomization failed")
+                finish_item(item);
+
+                item = i2c_seq_item::type_id::create("rand_read");
+                start_item(item);
+                if (!item.randomize() with {
+                    op == i2c_seq_item::I2C_READ;
+                })
+                    `uvm_fatal("RAND", "READ randomization failed")
+                finish_item(item);
+
+                item = i2c_seq_item::type_id::create("rand_wr_rd");
+                start_item(item);
+                if (!item.randomize() with {
+                    op == i2c_seq_item::I2C_WR_RD;
+                })
+                    `uvm_fatal("RAND", "WR_RD randomization failed")
+                finish_item(item);
+
+                item = i2c_seq_item::type_id::create("rand_wrong_addr");
+                start_item(item);
+                if (!item.randomize() with {
+                    op == i2c_seq_item::I2C_WRONG_ADDR;
+                })
+                    `uvm_fatal("RAND", "WRONG_ADDR randomization failed")
+                finish_item(item);
+
+            end
+
+            `uvm_info(get_type_name(), "I2C sequence end", UVM_LOW)
         endtask
+
     endclass
 
 
@@ -220,9 +249,11 @@ package i2c_pkg;
         `uvm_component_utils(i2c_driver)
 
         virtual i2c_if i_if;
+        uvm_analysis_port #(i2c_seq_item) ap;
 
         function new(string name, uvm_component parent);
             super.new(name, parent);
+            ap = new("ap", this);
         endfunction
 
         function void build_phase(uvm_phase phase);
@@ -260,7 +291,6 @@ package i2c_pkg;
             do begin
                 @(i_if.drv_cb);
             end while (i_if.drv_cb.master_done !== 1'b1);
-
             @(i_if.drv_cb);
         endtask
 
@@ -294,6 +324,17 @@ package i2c_pkg;
             wait_master_done();
         endtask
 
+        task sample_result(ref i2c_seq_item tr);
+            repeat (3) @(i_if.drv_cb);
+
+            tr.master_rx_data   = i_if.drv_cb.master_rx_data;
+            tr.slave_rx_data    = i_if.drv_cb.slave_rx_data;
+            tr.ack_out          = i_if.drv_cb.ack_out;
+            tr.slave_addr_match = i_if.drv_cb.slave_addr_match;
+            tr.slave_rw_mode    = i_if.drv_cb.slave_rw_mode;
+            tr.slave_master_ack = i_if.drv_cb.slave_master_ack;
+        endtask
+
         task drive_write(i2c_seq_item tr);
             i_if.drv_cb.slave_addr    <= tr.slave_addr;
             i_if.drv_cb.slave_tx_data <= tr.slave_tx_data;
@@ -302,6 +343,8 @@ package i2c_pkg;
             send_write({tr.slave_addr, 1'b0});
             send_write(tr.write_data);
             send_stop();
+
+            sample_result(tr);
         endtask
 
         task drive_read(i2c_seq_item tr);
@@ -312,6 +355,8 @@ package i2c_pkg;
             send_write({tr.slave_addr, 1'b1});
             send_read(1'b1);
             send_stop();
+
+            sample_result(tr);
         endtask
 
         task drive_wr_rd(i2c_seq_item tr);
@@ -329,6 +374,8 @@ package i2c_pkg;
             send_write({tr.slave_addr, 1'b1});
             send_read(1'b1);
             send_stop();
+
+            sample_result(tr);
         endtask
 
         task drive_wrong_addr(i2c_seq_item tr);
@@ -338,6 +385,8 @@ package i2c_pkg;
             send_start();
             send_write({tr.wrong_addr, 1'b0});
             send_stop();
+
+            sample_result(tr);
         endtask
 
         task run_phase(uvm_phase phase);
@@ -347,7 +396,7 @@ package i2c_pkg;
                 seq_item_port.get_next_item(req);
 
                 `uvm_info(get_type_name(),
-                    $sformatf("DRIVE: %s", req.convert2string()),
+                    $sformatf("DRIVE START: %s", req.convert2string()),
                     UVM_MEDIUM)
 
                 case (req.op)
@@ -358,52 +407,12 @@ package i2c_pkg;
                     default:                      drive_write(req);
                 endcase
 
+                `uvm_info(get_type_name(),
+                    $sformatf("DRIVE DONE : %s", req.convert2string()),
+                    UVM_MEDIUM)
+
+                ap.write(req);
                 seq_item_port.item_done();
-            end
-        endtask
-
-    endclass
-
-
-    class i2c_monitor extends uvm_monitor;
-        `uvm_component_utils(i2c_monitor)
-
-        virtual i2c_if i_if;
-        uvm_analysis_port #(i2c_seq_item) ap;
-
-        function new(string name, uvm_component parent);
-            super.new(name, parent);
-            ap = new("ap", this);
-        endfunction
-
-        function void build_phase(uvm_phase phase);
-            super.build_phase(phase);
-            if (!uvm_config_db#(virtual i2c_if)::get(this, "", "i_if", i_if)) begin
-                `uvm_fatal(get_type_name(), "virtual interface i_if not found")
-            end
-        endfunction
-
-        task run_phase(uvm_phase phase);
-            i2c_seq_item tr;
-
-            forever begin
-                @(i_if.mon_cb);
-
-                if (i_if.mon_cb.master_done) begin
-                    tr = i2c_seq_item::type_id::create("tr");
-
-                    tr.slave_addr       = i_if.mon_cb.slave_addr;
-                    tr.write_data       = i_if.mon_cb.master_tx_data;
-                    tr.slave_tx_data    = i_if.mon_cb.slave_tx_data;
-                    tr.master_rx_data   = i_if.mon_cb.master_rx_data;
-                    tr.slave_rx_data    = i_if.mon_cb.slave_rx_data;
-                    tr.ack_out          = i_if.mon_cb.ack_out;
-                    tr.slave_addr_match = i_if.mon_cb.slave_addr_match;
-                    tr.slave_rw_mode    = i_if.mon_cb.slave_rw_mode;
-                    tr.slave_master_ack = i_if.mon_cb.slave_master_ack;
-
-                    ap.write(tr);
-                end
             end
         endtask
 
@@ -418,7 +427,7 @@ package i2c_pkg;
         int pass_count = 0;
         int fail_count = 0;
         int check_count = 0;
-
+        int transaction_count = 0;
         function new(string name, uvm_component parent);
             super.new(name, parent);
             imp = new("imp", this);
@@ -438,45 +447,66 @@ package i2c_pkg;
 
         function void write(i2c_seq_item tr);
 
-            if (tr.slave_addr_match && tr.slave_rw_mode == 1'b0) begin
-                if (tr.ack_out === 1'b0)
-                    check_pass("WRITE ACK received");
-                else
-                    check_fail("WRITE expected ACK=0");
+            transaction_count++;
 
-                if (tr.slave_rx_data === tr.write_data)
-                    check_pass($sformatf("WRITE data matched: 0x%02h", tr.write_data));
-                else
-                    check_fail($sformatf("WRITE data mismatch exp=0x%02h got=0x%02h",
-                                         tr.write_data, tr.slave_rx_data));
-            end
+            case (tr.op)
 
-            if (tr.slave_addr_match && tr.slave_rw_mode == 1'b1) begin
-                if (tr.master_rx_data === tr.slave_tx_data)
-                    check_pass($sformatf("READ data matched: 0x%02h", tr.slave_tx_data));
-                else
-                    check_fail($sformatf("READ data mismatch exp=0x%02h got=0x%02h",
-                                         tr.slave_tx_data, tr.master_rx_data));
+                i2c_seq_item::I2C_WRITE: begin
+                    if (tr.ack_out === 1'b0)
+                        check_pass("WRITE ACK received");
+                    else
+                        check_fail("WRITE expected ACK=0");
 
-                if (tr.slave_master_ack === 1'b1)
-                    check_pass("READ final NACK checked");
-                else
-                    check_fail("READ expected final NACK=1");
-            end
+                    if (tr.slave_rx_data === tr.write_data)
+                        check_pass($sformatf("WRITE data matched: 0x%02h", tr.write_data));
+                    else
+                        check_fail($sformatf("WRITE data mismatch exp=0x%02h got=0x%02h",
+                                             tr.write_data, tr.slave_rx_data));
+                end
 
-            if (!tr.slave_addr_match) begin
-                if (tr.ack_out === 1'b1)
-                    check_pass("Wrong address NACK checked");
-                else
-                    check_fail("Wrong address expected NACK=1");
-            end
+                i2c_seq_item::I2C_READ: begin
+                    if (tr.master_rx_data === tr.slave_tx_data)
+                        check_pass($sformatf("READ data matched: 0x%02h", tr.slave_tx_data));
+                    else
+                        check_fail($sformatf("READ data mismatch exp=0x%02h got=0x%02h",
+                                             tr.slave_tx_data, tr.master_rx_data));
+
+                    if (tr.slave_master_ack === 1'b1)
+                        check_pass("READ final NACK checked");
+                    else
+                        check_fail("READ expected final NACK=1");
+                end
+
+                i2c_seq_item::I2C_WR_RD: begin
+                    if (tr.slave_rx_data === tr.write_data)
+                        check_pass($sformatf("WR_RD write matched: 0x%02h", tr.write_data));
+                    else
+                        check_fail($sformatf("WR_RD write mismatch exp=0x%02h got=0x%02h",
+                                             tr.write_data, tr.slave_rx_data));
+
+                    if (tr.master_rx_data === tr.slave_tx_data)
+                        check_pass($sformatf("WR_RD read matched: 0x%02h", tr.slave_tx_data));
+                    else
+                        check_fail($sformatf("WR_RD read mismatch exp=0x%02h got=0x%02h",
+                                             tr.slave_tx_data, tr.master_rx_data));
+                end
+
+                i2c_seq_item::I2C_WRONG_ADDR: begin
+                    if (tr.ack_out === 1'b1)
+                        check_pass("Wrong address NACK checked");
+                    else
+                        check_fail($sformatf("Wrong address expected NACK=1 got=%0b", tr.ack_out));
+                end
+
+            endcase
         endfunction
 
         function void report_phase(uvm_phase phase);
             super.report_phase(phase);
 
             `uvm_info("SCB", "==============================", UVM_LOW)
-            `uvm_info("SCB", "I2C SCOREBOARD FINAL REPORT", UVM_LOW)
+            `uvm_info("SCB", "I2C SCOREBOARD FINAL REPORT", UVM_LOW)     
+            `uvm_info("SCB", $sformatf("TRANSACTION COUNT : %0d", transaction_count), UVM_LOW)
             `uvm_info("SCB", $sformatf("CHECK COUNT : %0d", check_count), UVM_LOW)
             `uvm_info("SCB", $sformatf("PASS COUNT  : %0d", pass_count), UVM_LOW)
             `uvm_info("SCB", $sformatf("FAIL COUNT  : %0d", fail_count), UVM_LOW)
@@ -494,28 +524,44 @@ package i2c_pkg;
         covergroup i2c_cg;
             option.per_instance = 1;
 
+            cp_op : coverpoint tr.op {
+                bins write      = {i2c_seq_item::I2C_WRITE};
+                bins read       = {i2c_seq_item::I2C_READ};
+                bins wr_rd      = {i2c_seq_item::I2C_WR_RD};
+                bins wrong_addr = {i2c_seq_item::I2C_WRONG_ADDR};
+            }
+
             cp_ack : coverpoint tr.ack_out {
-                bins ack  = {0};
-                bins nack = {1};
+                bins ack  = {1'b0};
+                bins nack = {1'b1};
             }
 
             cp_addr_match : coverpoint tr.slave_addr_match {
-                bins miss  = {0};
-                bins match = {1};
+                bins miss  = {1'b0};
+                bins match = {1'b1};
             }
 
             cp_rw : coverpoint tr.slave_rw_mode {
-                bins write = {0};
-                bins read  = {1};
+                bins write_mode = {1'b0};
+                bins read_mode  = {1'b1};
             }
 
-            cp_data : coverpoint tr.write_data {
-                bins zero = {8'h00};
-                bins max  = {8'hFF};
-                bins etc  = {[8'h01:8'hFE]};
+            cp_wdata : coverpoint tr.write_data {
+                bins data_zero = {8'h00};
+                bins data_max  = {8'hFF};
+                bins data_etc  = {[8'h01:8'hFE]};
             }
 
-            cx_ack_rw : cross cp_ack, cp_rw;
+            cp_slave_tx_data : coverpoint tr.slave_tx_data {
+                bins data_zero = {8'h00};
+                bins data_max  = {8'hFF};
+                bins data_etc  = {[8'h01:8'hFE]};
+            }
+
+            cx_op_ack : cross cp_op, cp_ack;
+            cx_op_addr_match : cross cp_op, cp_addr_match;
+            cx_op_rw : cross cp_op, cp_rw;
+
         endgroup
 
         function new(string name, uvm_component parent);
@@ -531,11 +577,35 @@ package i2c_pkg;
         function void report_phase(uvm_phase phase);
             super.report_phase(phase);
 
-            `uvm_info("COV", "==============================", UVM_LOW)
-            `uvm_info("COV", $sformatf("I2C COVERAGE : %6.2f %%", i2c_cg.get_inst_coverage()), UVM_LOW)
-            `uvm_info("COV", "==============================", UVM_LOW)
-        endfunction
+            `uvm_info("COV", "========================================", UVM_LOW)
+            `uvm_info("COV", "======== I2C FUNCTIONAL COVERAGE ========", UVM_LOW)
+            `uvm_info("COV", $sformatf("TOTAL             : %6.2f %%", i2c_cg.get_inst_coverage()), UVM_LOW)
+            `uvm_info("COV", $sformatf("OP                : %6.2f %%  (WRITE / READ / WR_RD / WRONG_ADDR)",
+                                    i2c_cg.cp_op.get_inst_coverage()), UVM_LOW)
+            `uvm_info("COV", $sformatf("ACK               : %6.2f %%  (ACK=0 / NACK=1)",
+                                    i2c_cg.cp_ack.get_inst_coverage()), UVM_LOW)
+            `uvm_info("COV", $sformatf("ADDR_MATCH        : %6.2f %%  (MATCH / MISS)",
+                                    i2c_cg.cp_addr_match.get_inst_coverage()), UVM_LOW)
+            `uvm_info("COV", $sformatf("RW_MODE           : %6.2f %%  (WRITE_MODE / READ_MODE)",
+                                    i2c_cg.cp_rw.get_inst_coverage()), UVM_LOW)
+            `uvm_info("COV", $sformatf("MASTER_WRITE_DATA : %6.2f %%  (00 / FF / ETC)",
+                                    i2c_cg.cp_wdata.get_inst_coverage()), UVM_LOW)
+            `uvm_info("COV", $sformatf("SLAVE_TX_DATA     : %6.2f %%  (00 / FF / ETC)",
+                                    i2c_cg.cp_slave_tx_data.get_inst_coverage()), UVM_LOW)
+            `uvm_info("COV", $sformatf("OP x ACK          : %6.2f %%  (operation and ACK/NACK cross)",
+                                    i2c_cg.cx_op_ack.get_inst_coverage()), UVM_LOW)
+            `uvm_info("COV", $sformatf("OP x ADDR_MATCH   : %6.2f %%  (operation and address match cross)",
+                                    i2c_cg.cx_op_addr_match.get_inst_coverage()), UVM_LOW)
+            `uvm_info("COV", $sformatf("OP x RW_MODE      : %6.2f %%  (operation and R/W mode cross)",
+                                    i2c_cg.cx_op_rw.get_inst_coverage()), UVM_LOW)
+            `uvm_info("COV", "========================================", UVM_LOW)
 
+            if (i2c_cg.get_inst_coverage() < 100.0) begin
+                `uvm_info("COV",
+                        "Coverage is below 100%. This is not a functional failure. Add more scenarios or data values if 100% coverage is required.",
+                        UVM_LOW)
+            end
+        endfunction
     endclass
 
 
@@ -544,7 +614,6 @@ package i2c_pkg;
 
         uvm_sequencer #(i2c_seq_item) sqr;
         i2c_driver                    drv;
-        i2c_monitor                   mon;
 
         function new(string name, uvm_component parent);
             super.new(name, parent);
@@ -552,10 +621,8 @@ package i2c_pkg;
 
         function void build_phase(uvm_phase phase);
             super.build_phase(phase);
-
             sqr = uvm_sequencer#(i2c_seq_item)::type_id::create("sqr", this);
             drv = i2c_driver::type_id::create("drv", this);
-            mon = i2c_monitor::type_id::create("mon", this);
         endfunction
 
         function void connect_phase(uvm_phase phase);
@@ -579,7 +646,6 @@ package i2c_pkg;
 
         function void build_phase(uvm_phase phase);
             super.build_phase(phase);
-
             agt = i2c_agent::type_id::create("agt", this);
             scb = i2c_scoreboard::type_id::create("scb", this);
             cov = i2c_coverage::type_id::create("cov", this);
@@ -587,9 +653,8 @@ package i2c_pkg;
 
         function void connect_phase(uvm_phase phase);
             super.connect_phase(phase);
-
-            agt.mon.ap.connect(scb.imp);
-            agt.mon.ap.connect(cov.analysis_export);
+            agt.drv.ap.connect(scb.imp);
+            agt.drv.ap.connect(cov.analysis_export);
         endfunction
 
     endclass
@@ -613,6 +678,7 @@ package i2c_pkg;
             super.end_of_elaboration_phase(phase);
             uvm_top.print_topology();
         endfunction
+
     endclass
 
 
@@ -631,10 +697,36 @@ package i2c_pkg;
             seq = i2c_basic_seq::type_id::create("seq");
             seq.start(env.agt.sqr);
 
+
             #1000;
             phase.drop_objection(this);
         endtask
+
+        function void check_phase(uvm_phase phase);
+            super.check_phase(phase);
+
+            if (env.scb.transaction_count != 10000 ||
+                env.scb.check_count != 17500 ||
+                env.scb.pass_count != 17500 ||
+                env.scb.fail_count != 0) begin
+
+                `uvm_error("FINAL_CHECK",
+                    $sformatf(
+                        "FAIL: TX=%0d CHECK=%0d PASS=%0d FAIL=%0d",
+                        env.scb.transaction_count,
+                        env.scb.check_count,
+                        env.scb.pass_count,
+                        env.scb.fail_count))
+            end
+            else begin
+                `uvm_info("FINAL_CHECK",
+                    "SUCCESS: 10000 TRANSACTIONS / 17500 PASS / 0 FAIL",
+                    UVM_NONE)
+            end
+        endfunction
+
     endclass
+
 
 endpackage
 
@@ -684,9 +776,16 @@ module tb_top;
         run_test("i2c_basic_test");
     end
 
+
     initial begin
-        $fsdbDumpfile("i2c_tb.fsdb");
-        $fsdbDumpvars(0);
+        if ($test$plusargs("DUMP_FSDB")) begin
+            $fsdbDumpfile("i2c_tb.fsdb");
+            $fsdbDumpvars(0, tb_top, "+all");
+            $fsdbDumpvars("+struct");
+            $fsdbDumpvars("+mda");
+            $fsdbDumpvars("+packedmda");
+        end
     end
+
 
 endmodule
