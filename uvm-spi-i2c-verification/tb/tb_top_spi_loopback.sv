@@ -86,10 +86,21 @@ class spi_sequence extends uvm_sequence #(spi_seq_item);
             finish_item(item);
         end
 
-        repeat (30) begin
+        // repeat (30) begin
+        //     item = spi_seq_item::type_id::create("item");
+        //     start_item(item);
+        //     assert(item.randomize());
+        //     finish_item(item);
+        // end
+
+
+        repeat (9992) begin
             item = spi_seq_item::type_id::create("item");
             start_item(item);
-            assert(item.randomize());
+
+            if (!item.randomize())
+                `uvm_fatal("RAND", "Randomization failed")
+
             finish_item(item);
         end
     endtask
@@ -319,6 +330,135 @@ class spi_scoreboard extends uvm_scoreboard;
 endclass
 
 
+
+class spi_coverage extends uvm_subscriber #(spi_seq_item);
+    `uvm_component_utils(spi_coverage)
+
+    spi_seq_item item;
+
+    covergroup spi_cg;
+        option.per_instance = 1;
+
+        // Master가 보낸 MOSI 데이터 coverage
+        cp_master_tx : coverpoint item.master_tx_data {
+            bins zero = {8'h00};
+            bins max  = {8'hFF};
+            bins alt1 = {8'hAA};
+            bins alt2 = {8'h55};
+            bins etc  = {[8'h01:8'hFE]};
+        }
+
+        // Slave가 보낸 MISO 데이터 coverage
+        cp_slave_tx : coverpoint item.slave_tx_data {
+            bins zero = {8'h00};
+            bins max  = {8'hFF};
+            bins alt1 = {8'h11};
+            bins alt2 = {8'h22};
+            bins etc  = {[8'h01:8'hFE]};
+        }
+
+        // Master 수신 데이터 coverage
+        cp_master_rx : coverpoint item.master_rx_data {
+            bins zero = {8'h00};
+            bins max  = {8'hFF};
+            bins etc  = {[8'h01:8'hFE]};
+        }
+
+        // Slave 수신 데이터 coverage
+        cp_slave_rx : coverpoint item.slave_rx_data {
+            bins zero = {8'h00};
+            bins max  = {8'hFF};
+            bins etc  = {[8'h01:8'hFE]};
+        }
+
+        // Master done 확인
+        cp_master_done : coverpoint item.master_done {
+            bins not_done = {1'b0};
+            bins done     = {1'b1};
+        }
+
+        // Slave done 확인
+        cp_slave_done : coverpoint item.slave_done {
+            bins not_done = {1'b0};
+            bins done     = {1'b1};
+        }
+
+        // Master busy 최종 상태 확인
+        cp_master_busy : coverpoint item.master_busy {
+            bins idle = {1'b0};
+            bins busy = {1'b1};
+        }
+
+        // Slave busy 최종 상태 확인
+        cp_slave_busy : coverpoint item.slave_busy {
+            bins idle = {1'b0};
+            bins busy = {1'b1};
+        }
+
+        // MOSI 방향 데이터 일치 여부
+        cp_mosi_match : coverpoint (item.slave_rx_data == item.master_tx_data) {
+            bins fail = {1'b0};
+            bins pass = {1'b1};
+        }
+
+        // MISO 방향 데이터 일치 여부
+        cp_miso_match : coverpoint (item.master_rx_data == item.slave_tx_data) {
+            bins fail = {1'b0};
+            bins pass = {1'b1};
+        }
+
+        // Master TX와 Slave RX cross
+        cx_mosi_data : cross cp_master_tx, cp_slave_rx;
+
+        // Slave TX와 Master RX cross
+        cx_miso_data : cross cp_slave_tx, cp_master_rx;
+
+        // MOSI/MISO pass 조합
+        cx_data_match : cross cp_mosi_match, cp_miso_match;
+
+    endgroup
+
+    function new(string name, uvm_component c);
+        super.new(name, c);
+        spi_cg = new();
+    endfunction
+
+    function void write(spi_seq_item t);
+        item = t;
+        spi_cg.sample();
+    endfunction
+
+    function void report_phase(uvm_phase phase);
+        super.report_phase(phase);
+
+        `uvm_info("COV", "========================================", UVM_LOW)
+        `uvm_info("COV", "======== SPI FUNCTIONAL COVERAGE ========", UVM_LOW)
+        `uvm_info("COV", $sformatf("TOTAL             : %6.2f %%", spi_cg.get_inst_coverage()), UVM_LOW)
+        `uvm_info("COV", $sformatf("MASTER_TX_DATA    : %6.2f %%", spi_cg.cp_master_tx.get_inst_coverage()), UVM_LOW)
+        `uvm_info("COV", $sformatf("SLAVE_TX_DATA     : %6.2f %%", spi_cg.cp_slave_tx.get_inst_coverage()), UVM_LOW)
+        `uvm_info("COV", $sformatf("MASTER_RX_DATA    : %6.2f %%", spi_cg.cp_master_rx.get_inst_coverage()), UVM_LOW)
+        `uvm_info("COV", $sformatf("SLAVE_RX_DATA     : %6.2f %%", spi_cg.cp_slave_rx.get_inst_coverage()), UVM_LOW)
+        `uvm_info("COV", $sformatf("MASTER_DONE       : %6.2f %%", spi_cg.cp_master_done.get_inst_coverage()), UVM_LOW)
+        `uvm_info("COV", $sformatf("SLAVE_DONE        : %6.2f %%", spi_cg.cp_slave_done.get_inst_coverage()), UVM_LOW)
+        `uvm_info("COV", $sformatf("MASTER_BUSY       : %6.2f %%", spi_cg.cp_master_busy.get_inst_coverage()), UVM_LOW)
+        `uvm_info("COV", $sformatf("SLAVE_BUSY        : %6.2f %%", spi_cg.cp_slave_busy.get_inst_coverage()), UVM_LOW)
+        `uvm_info("COV", $sformatf("MOSI_MATCH        : %6.2f %%", spi_cg.cp_mosi_match.get_inst_coverage()), UVM_LOW)
+        `uvm_info("COV", $sformatf("MISO_MATCH        : %6.2f %%", spi_cg.cp_miso_match.get_inst_coverage()), UVM_LOW)
+        `uvm_info("COV", $sformatf("MOSI DATA CROSS   : %6.2f %%", spi_cg.cx_mosi_data.get_inst_coverage()), UVM_LOW)
+        `uvm_info("COV", $sformatf("MISO DATA CROSS   : %6.2f %%", spi_cg.cx_miso_data.get_inst_coverage()), UVM_LOW)
+        `uvm_info("COV", $sformatf("MATCH CROSS       : %6.2f %%", spi_cg.cx_data_match.get_inst_coverage()), UVM_LOW)
+        `uvm_info("COV", "========================================", UVM_LOW)
+
+        if (spi_cg.get_inst_coverage() < 100.0) begin
+            `uvm_info("COV",
+                      "Coverage is below 100%. This is not a functional failure. Add more transfers or data patterns if 100% coverage is required.",
+                      UVM_LOW)
+        end
+    endfunction
+
+endclass
+
+
 class spi_agent extends uvm_agent;
     `uvm_component_utils(spi_agent)
 
@@ -347,11 +487,13 @@ class spi_agent extends uvm_agent;
 endclass
 
 
+
 class spi_env extends uvm_env;
     `uvm_component_utils(spi_env)
 
     spi_agent      agt;
     spi_scoreboard scb;
+    spi_coverage   cov;
 
     function new(string name, uvm_component c);
         super.new(name, c);
@@ -362,15 +504,19 @@ class spi_env extends uvm_env;
 
         agt = spi_agent::type_id::create("agt", this);
         scb = spi_scoreboard::type_id::create("scb", this);
+        cov = spi_coverage::type_id::create("cov", this);
     endfunction
 
     function void connect_phase(uvm_phase phase);
         super.connect_phase(phase);
 
         agt.mon.ap.connect(scb.imp);
+        agt.mon.ap.connect(cov.analysis_export);
     endfunction
 
 endclass
+
+
 
 
 class spi_test extends uvm_test;
@@ -405,6 +551,24 @@ class spi_test extends uvm_test;
 
         phase.drop_objection(this);
     endtask
+
+
+    function void check_phase(uvm_phase phase);
+        super.check_phase(phase);
+
+        if (env.scb.pass_count != 10000 ||
+            env.scb.fail_count != 0) begin
+            `uvm_error("FINAL_CHECK",
+                $sformatf("Expected 10000 PASS / 0 FAIL, Got %0d PASS / %0d FAIL",
+                    env.scb.pass_count,
+                    env.scb.fail_count))
+        end
+        else begin
+            `uvm_info("FINAL_CHECK",
+                "SUCCESS: 10000 PASS / 0 FAIL",
+                UVM_NONE)
+        end
+    endfunction
 
 endclass
 
@@ -458,11 +622,20 @@ module tb_top_spi_loopback();
         run_test("spi_test");
     end
 
+    // initial begin
+    //     $fsdbDumpfile("wave.fsdb");
+    //     $fsdbDumpvars(0, tb_top_spi_loopback);
+    //     $fsdbDumpvars(0, tb_top_spi_loopback.dut.u_spi_master);
+    //     $fsdbDumpvars(0, tb_top_spi_loopback.dut.u_spi_slave);
+    // end
+
     initial begin
-        $fsdbDumpfile("wave.fsdb");
-        $fsdbDumpvars(0, tb_top_spi_loopback);
-        $fsdbDumpvars(0, tb_top_spi_loopback.dut.u_spi_master);
-        $fsdbDumpvars(0, tb_top_spi_loopback.dut.u_spi_slave);
+        if ($test$plusargs("DUMP_FSDB")) begin
+            $fsdbDumpfile("wave.fsdb");
+            $fsdbDumpvars(0, tb_top_spi_loopback);
+            $fsdbDumpvars(0, tb_top_spi_loopback.dut.u_spi_master);
+            $fsdbDumpvars(0, tb_top_spi_loopback.dut.u_spi_slave);
+        end
     end
 
 endmodule
