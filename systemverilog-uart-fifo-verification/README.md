@@ -19,6 +19,8 @@ Generator가 randomized transaction을 만들고 Driver가 DUT 입력 신호로 
 - Odd Parity 생성·검출
 - `rx_done & ~parity_error` 조건을 이용한 오류 데이터 RX FIFO push 차단
 
+![UART FIFO data and parity-error path](./assets/uart-parity-data-and-error-path.svg)
+
 ## Verification Environment
 
 | Component | Role |

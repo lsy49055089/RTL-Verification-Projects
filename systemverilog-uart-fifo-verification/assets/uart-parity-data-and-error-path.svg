@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1160" viewBox="0 0 1800 1160" role="img">
+<title>UART FIFO parity: shared RX/TX oversampling tick and error blocking</title>
+<rect width="1800" height="1160" fill="white"/>
+<text x="50" y="38" font-family="Arial, sans-serif" font-size="30" font-weight="700" text-anchor="start" fill="#202421">UART / FIFO / Parity - Data and Error Paths</text>
+<rect x="50" y="75" width="1700" height="80" fill="#f1f2f1" stroke="#39413b" stroke-width="2"/>
+<text x="900.0" y="123.5" font-family="Arial, sans-serif" font-size="25" font-weight="700" text-anchor="middle" fill="#202421">Shared RX / TX Tick: 100 MHz -&gt; 16 x 9,600 ticks/s</text>
+<rect x="50" y="270" width="300" height="220" fill="white" stroke="#39413b" stroke-width="2"/>
+<text x="200.0" y="328.8" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" fill="#202421">UART RX</text>
+<text x="200.0" y="357.8" font-family="Arial, sans-serif" font-size="20" font-weight="400" text-anchor="middle" fill="#202421">START / DATA</text>
+<text x="200.0" y="386.8" font-family="Arial, sans-serif" font-size="20" font-weight="400" text-anchor="middle" fill="#202421">PARITY / STOP</text>
+<text x="200.0" y="415.8" font-family="Arial, sans-serif" font-size="20" font-weight="400" text-anchor="middle" fill="#202421">8-bit LSB-first reconstruction</text>
+<text x="200.0" y="444.8" font-family="Arial, sans-serif" font-size="20" font-weight="400" text-anchor="middle" fill="#202421">Odd parity comparison</text>
+<rect x="500" y="270" width="300" height="220" fill="white" stroke="#39413b" stroke-width="2"/>
+<text x="650.0" y="343.3" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" fill="#202421">RX FIFO</text>
+<text x="650.0" y="372.3" font-family="Arial, sans-serif" font-size="20" font-weight="400" text-anchor="middle" fill="#202421">8-bit x 16 entries</text>
+<text x="650.0" y="401.3" font-family="Arial, sans-serif" font-size="20" font-weight="400" text-anchor="middle" fill="#202421">Store when push is enabled</text>
+<text x="650.0" y="430.3" font-family="Arial, sans-serif" font-size="20" font-weight="400" text-anchor="middle" fill="#202421">Circular read / write pointers</text>
+<rect x="950" y="270" width="300" height="220" fill="white" stroke="#39413b" stroke-width="2"/>
+<text x="1100.0" y="341.465" font-family="Arial, sans-serif" font-size="21" font-weight="700" text-anchor="middle" fill="#202421">TX FIFO</text>
+<text x="1100.0" y="371.91499999999996" font-family="Arial, sans-serif" font-size="21" font-weight="400" text-anchor="middle" fill="#202421">8-bit x 16 entries</text>
+<text x="1100.0" y="402.36499999999995" font-family="Arial, sans-serif" font-size="21" font-weight="400" text-anchor="middle" fill="#202421">Data from RX FIFO</text>
+<text x="1100.0" y="432.81499999999994" font-family="Arial, sans-serif" font-size="21" font-weight="400" text-anchor="middle" fill="#202421">Full / empty control</text>
+<rect x="1400" y="270" width="350" height="220" fill="white" stroke="#39413b" stroke-width="2"/>
+<text x="1575.0" y="328.8" font-family="Arial, sans-serif" font-size="20" font-weight="700" text-anchor="middle" fill="#202421">UART TX</text>
+<text x="1575.0" y="357.8" font-family="Arial, sans-serif" font-size="20" font-weight="400" text-anchor="middle" fill="#202421">START / DATA</text>
+<text x="1575.0" y="386.8" font-family="Arial, sans-serif" font-size="20" font-weight="400" text-anchor="middle" fill="#202421">PARITY / STOP</text>
+<text x="1575.0" y="415.8" font-family="Arial, sans-serif" font-size="20" font-weight="400" text-anchor="middle" fill="#202421">Start when TX FIFO is nonempty</text>
+<text x="1575.0" y="444.8" font-family="Arial, sans-serif" font-size="20" font-weight="400" text-anchor="middle" fill="#202421">16x tick / Odd parity / Stop</text>
+<polyline points="200,155 200,270" fill="none" stroke="#39413b" stroke-width="2.5"/>
+<polygon points="200,270 195.0,258.0 205.0,258.0" fill="#39413b"/>
+<text x="220" y="224" font-family="Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start" fill="#202421">16x Tick</text>
+<polyline points="1575,155 1575,270" fill="none" stroke="#39413b" stroke-width="2.5"/>
+<polygon points="1575,270 1570.0,258.0 1580.0,258.0" fill="#39413b"/>
+<text x="1595" y="224" font-family="Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start" fill="#202421">16x Tick</text>
+<polyline points="350,380 500,380" fill="none" stroke="#39413b" stroke-width="2.5"/>
+<polygon points="500,380 488.0,385.0 488.0,375.0" fill="#39413b"/>
+<text x="425" y="360" font-family="Arial, sans-serif" font-size="20" font-weight="400" text-anchor="middle" fill="#202421">rx_data[7:0]</text>
+<polyline points="800,380 950,380" fill="none" stroke="#39413b" stroke-width="2.5"/>
+<polygon points="950,380 938.0,385.0 938.0,375.0" fill="#39413b"/>
+<text x="875" y="360" font-family="Arial, sans-serif" font-size="20" font-weight="400" text-anchor="middle" fill="#202421">8-bit</text>
+<polyline points="1250,380 1400,380" fill="none" stroke="#39413b" stroke-width="2.5"/>
+<polygon points="1400,380 1388.0,385.0 1388.0,375.0" fill="#39413b"/>
+<text x="1325" y="350" font-family="Arial, sans-serif" font-size="18" font-weight="400" text-anchor="middle" fill="#202421">TX data + start</text>
+<text x="1325" y="414" font-family="Arial, sans-serif" font-size="18" font-weight="400" text-anchor="middle" fill="#202421">!TX FIFO empty</text>
+<rect x="50" y="650" width="300" height="170" fill="white" stroke="#39413b" stroke-width="2"/>
+<text x="200.0" y="696.465" font-family="Arial, sans-serif" font-size="21" font-weight="700" text-anchor="middle" fill="#202421">RX FIFO push gate</text>
+<text x="200.0" y="726.9150000000001" font-family="Arial, sans-serif" font-size="21" font-weight="400" text-anchor="middle" fill="#202421">push = rx_done</text>
+<text x="200.0" y="757.365" font-family="Arial, sans-serif" font-size="21" font-weight="400" text-anchor="middle" fill="#202421">AND NOT parity_error</text>
+<text x="200.0" y="787.815" font-family="Arial, sans-serif" font-size="21" font-weight="400" text-anchor="middle" fill="#202421">Error frame: push = 0</text>
+<polyline points="200,490 200,650" fill="none" stroke="#39413b" stroke-width="2.5"/>
+<polygon points="200,650 195.0,638.0 205.0,638.0" fill="#39413b"/>
+<text x="220" y="575" font-family="Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start" fill="#202421">rx_done / parity_error</text>
+<polyline points="350,735 650,735 650,490" fill="none" stroke="#39413b" stroke-width="2.5"/>
+<polygon points="650,490 655.0,502.0 645.0,502.0" fill="#39413b"/>
+<text x="670" y="615" font-family="Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start" fill="#202421">Push enable</text>
+<rect x="1400" y="650" width="350" height="170" fill="white" stroke="#39413b" stroke-width="2"/>
+<text x="1575.0" y="694.63" font-family="Arial, sans-serif" font-size="22" font-weight="700" text-anchor="middle" fill="#202421">TX serial output</text>
+<text x="1575.0" y="726.53" font-family="Arial, sans-serif" font-size="22" font-weight="400" text-anchor="middle" fill="#202421">LSB-first data frame</text>
+<text x="1575.0" y="758.43" font-family="Arial, sans-serif" font-size="22" font-weight="400" text-anchor="middle" fill="#202421">8-bit data + Odd parity</text>
+<text x="1575.0" y="790.3299999999999" font-family="Arial, sans-serif" font-size="22" font-weight="400" text-anchor="middle" fill="#202421">Idle HIGH / Stop bit = 1</text>
+<polyline points="1575,490 1575,650" fill="none" stroke="#39413b" stroke-width="2.5"/>
+<polygon points="1575,650 1570.0,638.0 1580.0,638.0" fill="#39413b"/>
+<text x="1595" y="575" font-family="Arial, sans-serif" font-size="20" font-weight="400" text-anchor="start" fill="#202421">TX</text>
+<line x1="50" y1="875" x2="1750" y2="875" stroke="#8b918c" stroke-width="1.5"/>
+<text x="50" y="906" font-family="Arial, sans-serif" font-size="22" font-weight="700" text-anchor="start" fill="#202421">TESTBENCH / MONITOR</text>
+<rect x="50" y="930" width="1700" height="130" fill="#f1f2f1" stroke="#39413b" stroke-width="2" stroke-dasharray="9 6"/>
+<text x="900.0" y="969.47" font-family="Arial, sans-serif" font-size="23" font-weight="700" text-anchor="middle" fill="#202421">Parity-error injection and blocking check</text>
+<text x="900.0" y="1002.82" font-family="Arial, sans-serif" font-size="23" font-weight="400" text-anchor="middle" fill="#202421">Invert RX parity -&gt; wait 40 oversampling ticks after rx_done</text>
+<text x="900.0" y="1036.17" font-family="Arial, sans-serif" font-size="23" font-weight="400" text-anchor="middle" fill="#202421">Check parity_error = 1 and tx_busy = 0 (40 ticks = 2.5 bit periods)</text>
+<text x="900" y="1120" font-family="Arial, sans-serif" font-size="22" font-weight="400" text-anchor="middle" fill="#202421">Hardware data path: UART RX -&gt; RX FIFO -&gt; TX FIFO -&gt; UART TX.</text>
+</svg>
