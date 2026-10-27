@@ -22,7 +22,7 @@ SystemVerilog로 SPI/I2C RTL을 직접 설계하고, UVM 환경에서 자동 검
 
 ![SPI and I2C UVM verification architecture](assets/uvm-architecture.svg)
 
-The UVM test creates transactions through a sequencer/driver path. **SPI** uses a monitor to reconstruct completed transfers and send them to scoreboard and coverage. In the **I2C testbench used for the 10,000-transaction run**, the driver samples DUT results after the command sequence and sends them through an analysis port to scoreboard and coverage. This is completion-state sampling, not independent bus-level monitoring.
+Sequence가 만든 트랜잭션을 Sequencer·Driver를 통해 DUT에 전달합니다. SPI Monitor는 완료된 전송을 수집하고, I2C Driver는 명령 완료 시점의 DUT 상태·데이터를 수집합니다. 각 결과는 Analysis Port를 통해 Scoreboard와 Coverage로 전달합니다.
 
 ## Verification Scenarios
 
@@ -37,20 +37,27 @@ The UVM test creates transactions through a sequencer/driver path. **SPI** uses 
 
 ## Results
 
-**2026-10-19 ~ 2026-10-20 extended UVM regression** — Synopsys VCS W-2024.09-SP2 / UVM 1.2, random seed `1234`:
+**SPI·I2C 자동 검증**
+
+검증 조건 · 2026.10.19–20 · Synopsys VCS W-2024.09-SP2 · UVM 1.2 · random seed `1234`
 
 | Target | Transactions | Scoreboard PASS checks | FAIL | Functional coverage |
 |---|---:|---:|---:|---:|
 | SPI Mode 0 | **10,000** (8 directed + 9,992 random) | **10,000** | **0** | Defined in source; numeric result not retained here |
 | I2C | **10,000** (4 operations × 2,500) | **17,500** | **0** | **83.33%** |
 
-Both supplied simulator report summaries recorded **UVM_ERROR: 0, UVM_FATAL: 0**. SPI checks a completed full-duplex transfer once per transaction; I2C checks two conditions for Write, Read, and Write-Read and one for Wrong Address, producing 17,500 individual PASS checks from 10,000 transactions. **PASS check count is not the number of distinct scenarios.**
+SPI·I2C 시뮬레이션 결과는 모두 **UVM_ERROR: 0, UVM_FATAL: 0**입니다. SPI checks a completed full-duplex transfer once per transaction; I2C checks two conditions for Write, Read, and Write-Read and one for Wrong Address, producing 17,500 individual PASS checks from 10,000 transactions. **PASS check count is not the number of distinct scenarios.**
 
-I2C coverpoint metrics for operation, ACK/NACK, address match, R/W mode, and data were each 100%. Three defined crosses (operation × ACK, address match, R/W) each reached **50%**, contributing to the 83.33% aggregate. This percentage describes **only defined coverage bins**, not total I2C protocol coverage. Cross gaps remain outside this round's scope.
+I2C coverpoint metrics for operation, ACK/NACK, address match, R/W mode, and data were each 100%. Three defined crosses (operation × ACK, address match, R/W) each reached **50%**, contributing to the 83.33% aggregate. Coverage는 정의한 Bin을 기준으로 집계했습니다. 미도달 조건은 잘못된 주소 Read와 Write-Read의 중간 Write 관찰입니다.
 
-**Historical submitted results (2026-06):** SPI **38 PASS / 0 FAIL**, I2C **7 PASS / 0 FAIL** (7 I2C check assertions across four directed transactions). These historical counts are retained for comparison.
+<details>
+<summary>2026.06 검증 결과</summary>
 
-**Evidence and reproducibility:** Regression results above were read from VCS logs supplied during the October 2026 verification session; the raw `spi_10k.log` and `i2c_10k.log` files are kept on the user's Linux server and **are not included in this repository**. The checked-in SV sources reflect the tested version. GitHub Actions performs elaboration checks, **not these UVM runs**. Basys3 SPI timing was also checked separately using a logic analyzer.
+SPI **38 PASS / 0 FAIL**, I2C **7 PASS / 0 FAIL**입니다. I2C는 Directed Transaction 4건에서 7개 항목을 검사했습니다.
+
+</details>
+
+**실행 자료:** VCS 원본 로그 `spi_10k.log`·`i2c_10k.log`는 별도 보관하며 저장소에는 포함하지 않았습니다. GitHub Actions에서는 DUT elaboration을 검사합니다. UVM 검증은 아래 VCS 명령으로 실행하며, Basys3의 SPI 파형은 Logic Analyzer로 확인했습니다.
 
 ## Troubleshooting Applied
 
@@ -90,10 +97,10 @@ vcs -full64 -sverilog -timescale=1ns/1ps -ntb_opts uvm-1.2 \
 
 The SV testbenches gate FSDB generation on `+DUMP_FSDB`, so the commands above do not request waveform dumps. If enabled, the setup needs compatible Verdi FSDB PLI. Simulator/version/tool licensing may affect reproducibility. Review the final Scoreboard and UVM report summaries; do not treat successful compilation as proof of PASS.
 
-## Current Scope
+## 검증 조건
 
 - SPI is limited to one Master, one Slave and Mode 0.
 - I2C does not yet cover multi-master arbitration, clock stretching, multiple Slaves or external sensors.
-- Next verification steps are SVA protocol properties, code coverage, coverage closure, SPI CPOL/CPHA modes and I2C repeated START.
+- SVA protocol properties, code coverage, SPI의 다른 CPOL/CPHA 모드와 I2C repeated START는 검증 범위에 포함하지 않았습니다.
 
 

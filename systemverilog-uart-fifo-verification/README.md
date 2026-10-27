@@ -79,7 +79,7 @@ Reset 상태는 immediate assertion으로 확인하고, 데이터 경로는 Moni
 2. UART Loopback: `dut/uart_loopback_sv.sv` + `tb/tb_uart_sv.sv`
 3. Integrated Loopback: `dut/fifo_sv.sv` + `dut/uart_loopback_sv.sv` + `dut/uart_fifo_loopback_sv.sv` + `tb/tb_uart_fifo_loopback_sv.sv`
 
-## Reproduction Notes and Limitations
+## 실행 조건
 
 - Testbench는 DUT 내부 신호를 hierarchical reference로 관찰하므로 module hierarchy를 유지해야 합니다.
 - 이 공개 스냅샷에는 Vivado project/cache, waveform database, 개발일지, 일정표, 발표 자료와 전체 보고서를 포함하지 않았습니다.
