@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="820" viewBox="0 0 1600 820" role="img"><title>I2C UVM: Driver completion sampling, Scoreboard and Coverage</title>
+<rect width="100%" height="100%" fill="white"/>
+<text x="30" y="45" text-anchor="start" font-family="Arial, sans-serif" font-size="30" font-weight="700" fill="#202421">I2C UVM | 7-bit address | 8-bit data</text>
+<rect x="30" y="130" width="280" height="150" fill="#f1f2f1" stroke="#39413b" stroke-width="2"/>
+<text x="170.0" y="181.69" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" font-weight="700" fill="#202421">Sequence</text>
+<text x="170.0" y="212.14" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#202421">4 ops x 2,500</text>
+<text x="170.0" y="242.59" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#202421">4 directed + 9,996 random</text>
+<rect x="360" y="130" width="230" height="150" fill="white" stroke="#39413b" stroke-width="2"/>
+<text x="475.0" y="196.14499999999998" text-anchor="middle" font-family="Arial, sans-serif" font-size="23" font-weight="700" fill="#202421">Sequencer</text>
+<text x="475.0" y="229.49499999999998" text-anchor="middle" font-family="Arial, sans-serif" font-size="23" font-weight="400" fill="#202421">Sequence items</text>
+<rect x="640" y="130" width="320" height="150" fill="white" stroke="#39413b" stroke-width="2"/>
+<text x="800.0" y="182.8" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#202421">Driver</text>
+<text x="800.0" y="211.8" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="400" fill="#202421">START / WRITE / READ / STOP</text>
+<text x="800.0" y="240.8" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="400" fill="#202421">Sample after completion</text>
+<rect x="1060" y="130" width="230" height="150" fill="#f1f2f1" stroke="#39413b" stroke-width="2"/>
+<text x="1175.0" y="196.14499999999998" text-anchor="middle" font-family="Arial, sans-serif" font-size="23" font-weight="700" fill="#202421">I2C Master</text>
+<text x="1175.0" y="229.49499999999998" text-anchor="middle" font-family="Arial, sans-serif" font-size="23" font-weight="400" fill="#202421">Control + TX / RX</text>
+<rect x="1360" y="130" width="210" height="150" fill="#f1f2f1" stroke="#39413b" stroke-width="2"/>
+<text x="1465.0" y="196.91500000000002" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" font-weight="700" fill="#202421">I2C Slave</text>
+<text x="1465.0" y="227.365" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#202421">Address + TX / RX</text>
+<polyline points="310,205 360,205" fill="none" stroke="#39413b" stroke-width="2.5"/>
+<polygon points="360,205 348.0,210.0 348.0,200.0" fill="#39413b"/>
+<polyline points="590,205 640,205" fill="none" stroke="#39413b" stroke-width="2.5"/>
+<polygon points="640,205 628.0,210.0 628.0,200.0" fill="#39413b"/>
+<polyline points="960,170 1060,170" fill="none" stroke="#39413b" stroke-width="2.5"/>
+<polygon points="1060,170 1048.0,175.0 1048.0,165.0" fill="#39413b"/>
+<text x="1010" y="153" text-anchor="middle" font-family="Arial, sans-serif" font-size="17" font-weight="400" fill="#202421">Drive</text>
+<polyline points="1060,245 960,245" fill="none" stroke="#39413b" stroke-width="2.5"/>
+<polygon points="960,245 972.0,240.0 972.0,250.0" fill="#39413b"/>
+<text x="1010" y="230" text-anchor="middle" font-family="Arial, sans-serif" font-size="17" font-weight="400" fill="#202421">Sample</text>
+<polyline points="1290,180 1360,180" fill="none" stroke="#39413b" stroke-width="2.5"/>
+<polygon points="1360,180 1348.0,185.0 1348.0,175.0" fill="#39413b"/>
+<text x="1325" y="165" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="400" fill="#202421">SCL</text>
+<polyline points="1290,240 1360,240" fill="none" stroke="#39413b" stroke-width="2.5"/>
+<polygon points="1360,240 1348.0,245.0 1348.0,235.0" fill="#39413b"/>
+<polygon points="1290,240 1302.0,235.0 1302.0,245.0" fill="#39413b"/>
+<text x="1325" y="222" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="400" fill="#202421">SDA</text>
+<text x="1060" y="320" text-anchor="start" font-family="Arial, sans-serif" font-size="22" font-weight="400" fill="#202421">SDA: drive Low / release Z + pull-up</text>
+<rect x="640" y="500" width="380" height="190" fill="#f1f2f1" stroke="#39413b" stroke-width="2"/>
+<text x="830.0" y="552.7950000000001" text-anchor="middle" font-family="Arial, sans-serif" font-size="23" font-weight="700" fill="#202421">Scoreboard</text>
+<text x="830.0" y="586.1450000000001" text-anchor="middle" font-family="Arial, sans-serif" font-size="23" font-weight="400" fill="#202421">Data + ACK / NACK</text>
+<text x="830.0" y="619.4950000000001" text-anchor="middle" font-family="Arial, sans-serif" font-size="23" font-weight="400" fill="#202421">Wrong-address NACK</text>
+<text x="830.0" y="652.845" text-anchor="middle" font-family="Arial, sans-serif" font-size="23" font-weight="400" fill="#202421">17,500 PASS checks</text>
+<rect x="1100" y="500" width="470" height="190" fill="white" stroke="#39413b" stroke-width="2"/>
+<text x="1335.0" y="541.24" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" font-weight="700" fill="#202421">Coverage Subscriber</text>
+<text x="1335.0" y="571.69" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#202421">6 coverpoints: 100% each</text>
+<text x="1335.0" y="602.14" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#202421">OP x ACK / Address Match / R-W</text>
+<text x="1335.0" y="632.59" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#202421">3 crosses: 50% each</text>
+<text x="1335.0" y="663.04" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#202421">Total: 83.33%</text>
+<polyline points="800,280 800,420 830,420 830,500" fill="none" stroke="#39413b" stroke-width="2.5"/>
+<polygon points="830,500 825.0,488.0 835.0,488.0" fill="#39413b"/>
+<polyline points="900,280 900,380 1335,380 1335,500" fill="none" stroke="#39413b" stroke-width="2.5"/>
+<polygon points="1335,500 1330.0,488.0 1340.0,488.0" fill="#39413b"/>
+<text x="30" y="750" text-anchor="start" font-family="Arial, sans-serif" font-size="23" font-weight="400" fill="#202421">Driver Analysis Port -&gt; Scoreboard / Coverage; no independent I2C Monitor in this testbench.</text>
+<text x="30" y="788" text-anchor="start" font-family="Arial, sans-serif" font-size="23" font-weight="400" fill="#202421">Write | Read | Write -&gt; STOP -&gt; START -&gt; Read | Wrong Address</text></svg>

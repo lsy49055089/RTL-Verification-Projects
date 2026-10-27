@@ -15,7 +15,7 @@ SystemVerilog로 SPI/I2C RTL을 직접 설계하고, UVM 환경에서 자동 검
 | I2C RTL | START/STOP, Write/Read, ACK/NACK, address match, open-drain SDA |
 | UVM | Sequence Item, Sequence, Sequencer, Driver, Monitor, Agent, Environment, Test, Factory, Config DB |
 | Self-checking | Analysis Port/Imp, scoreboard PASS/FAIL, protocol status checks |
-| Coverage | I2C ACK/NACK, address match, R/W mode, data bins, ACK × R/W cross |
+| Coverage | I2C operation, ACK/NACK, address match, R/W mode, data bins; operation × ACK / address match / R/W crosses |
 | Hardware | Basys3 Master/Slave wrappers, button debounce, LED/FND status, logic-analyzer validation |
 
 ## Architecture
@@ -95,4 +95,5 @@ The SV testbenches gate FSDB generation on `+DUMP_FSDB`, so the commands above d
 - SPI is limited to one Master, one Slave and Mode 0.
 - I2C does not yet cover multi-master arbitration, clock stretching, multiple Slaves or external sensors.
 - Next verification steps are SVA protocol properties, code coverage, coverage closure, SPI CPOL/CPHA modes and I2C repeated START.
+
 
