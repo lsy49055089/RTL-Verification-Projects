@@ -1,47 +1,60 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1560" viewBox="0 0 1600 1560" role="img"><rect width="100%" height="100%" fill="white"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1640" viewBox="0 0 1600 1640" role="img"><rect width="100%" height="100%" fill="white"/>
 <g><rect width="100%" height="100%" fill="white"/>
 <text x="30" y="45" text-anchor="start" font-family="Arial, sans-serif" font-size="30" font-weight="700" fill="#202421">SPI UVM | Mode 0 | 8-bit Full-Duplex</text>
-<rect x="30" y="120" width="280" height="150" fill="#f1f2f1" stroke="#39413b" stroke-width="2"/>
-<text x="170.0" y="170.57999999999998" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="700" fill="#202421">Sequence</text>
-<text x="170.0" y="202.48" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="400" fill="#202421">8 directed + 9,992 random</text>
-<text x="170.0" y="234.38" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="400" fill="#202421">10,000 transactions</text>
-<rect x="360" y="120" width="230" height="150" fill="white" stroke="#39413b" stroke-width="2"/>
-<text x="475.0" y="186.14499999999998" text-anchor="middle" font-family="Arial, sans-serif" font-size="23" font-weight="700" fill="#202421">Sequencer</text>
-<text x="475.0" y="219.49499999999998" text-anchor="middle" font-family="Arial, sans-serif" font-size="23" font-weight="400" fill="#202421">Sequence items</text>
-<rect x="640" y="120" width="300" height="150" fill="white" stroke="#39413b" stroke-width="2"/>
-<text x="790.0" y="169.47" text-anchor="middle" font-family="Arial, sans-serif" font-size="23" font-weight="700" fill="#202421">Driver</text>
-<text x="790.0" y="202.82" text-anchor="middle" font-family="Arial, sans-serif" font-size="23" font-weight="400" fill="#202421">Master / Slave TX</text>
-<text x="790.0" y="236.17000000000002" text-anchor="middle" font-family="Arial, sans-serif" font-size="23" font-weight="400" fill="#202421">Start + completion wait</text>
-<rect x="1040" y="120" width="500" height="150" fill="#f1f2f1" stroke="#39413b" stroke-width="2"/>
-<text x="1290.0" y="169.47" text-anchor="middle" font-family="Arial, sans-serif" font-size="23" font-weight="700" fill="#202421">SPI Master + Slave</text>
-<text x="1290.0" y="202.82" text-anchor="middle" font-family="Arial, sans-serif" font-size="23" font-weight="400" fill="#202421">SS_N / SCLK / MOSI -&gt;</text>
-<text x="1290.0" y="236.17000000000002" text-anchor="middle" font-family="Arial, sans-serif" font-size="23" font-weight="400" fill="#202421">&lt;- MISO</text>
-<polyline points="310,195 360,195" fill="none" stroke="#39413b" stroke-width="2.5"/>
-<polygon points="360,195 348.0,200.0 348.0,190.0" fill="#39413b"/>
-<polyline points="590,195 640,195" fill="none" stroke="#39413b" stroke-width="2.5"/>
-<polygon points="640,195 628.0,200.0 628.0,190.0" fill="#39413b"/>
-<polyline points="940,195 1040,195" fill="none" stroke="#39413b" stroke-width="2.5"/>
-<polygon points="1040,195 1028.0,200.0 1028.0,190.0" fill="#39413b"/>
-<polyline points="1290,270 1290,330" fill="none" stroke="#39413b" stroke-width="2.5"/>
-<polygon points="1290,330 1285.0,318.0 1295.0,318.0" fill="#39413b"/>
-<rect x="1040" y="330" width="500" height="120" fill="white" stroke="#39413b" stroke-width="2"/>
-<text x="1290.0" y="364.46999999999997" text-anchor="middle" font-family="Arial, sans-serif" font-size="23" font-weight="700" fill="#202421">Monitor</text>
-<text x="1290.0" y="397.82" text-anchor="middle" font-family="Arial, sans-serif" font-size="23" font-weight="400" fill="#202421">Busy / Done during transfer</text>
-<text x="1290.0" y="431.16999999999996" text-anchor="middle" font-family="Arial, sans-serif" font-size="23" font-weight="400" fill="#202421">TX / RX at transfer completion</text>
-<rect x="640" y="520" width="440" height="140" fill="#f1f2f1" stroke="#39413b" stroke-width="2"/>
-<text x="860.0" y="549.63" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="700" fill="#202421">Scoreboard</text>
-<text x="860.0" y="581.53" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="400" fill="#202421">Slave RX = Master TX</text>
-<text x="860.0" y="613.43" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="400" fill="#202421">Master RX = Slave TX</text>
-<text x="860.0" y="645.3299999999999" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="400" fill="#202421">Busy / Done state checks</text>
-<rect x="1120" y="520" width="420" height="140" fill="white" stroke="#39413b" stroke-width="2"/>
-<text x="1330.0" y="581.53" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="700" fill="#202421">Coverage</text>
-<text x="1330.0" y="613.43" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="400" fill="#202421">Completed transfer observations</text>
-<polyline points="1160,450 1160,485 860,485 860,520" fill="none" stroke="#39413b" stroke-width="2.5"/>
-<polygon points="860,520 855.0,508.0 865.0,508.0" fill="#39413b"/>
-<polyline points="1420,450 1420,520" fill="none" stroke="#39413b" stroke-width="2.5"/>
-<polygon points="1420,520 1415.0,508.0 1425.0,508.0" fill="#39413b"/>
-<text x="30" y="710" text-anchor="start" font-family="Arial, sans-serif" font-size="23" font-weight="400" fill="#202421">SPI Monitor sends observations to Scoreboard and Coverage through Analysis Ports.</text></g>
-<g transform="translate(0 740)"><rect width="100%" height="100%" fill="white"/>
+<rect x="30" y="160" width="280" height="145" fill="#f1f2f1" stroke="#39413b" stroke-width="2"/>
+<text x="170.0" y="208.07999999999998" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="700" fill="#202421">Sequence</text>
+<text x="170.0" y="239.98" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="400" fill="#202421">8 directed + 9,992 random</text>
+<text x="170.0" y="271.88" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="400" fill="#202421">10,000 transactions</text>
+<rect x="360" y="160" width="230" height="145" fill="white" stroke="#39413b" stroke-width="2"/>
+<text x="475.0" y="223.64499999999998" text-anchor="middle" font-family="Arial, sans-serif" font-size="23" font-weight="700" fill="#202421">Sequencer</text>
+<text x="475.0" y="256.995" text-anchor="middle" font-family="Arial, sans-serif" font-size="23" font-weight="400" fill="#202421">Sequence items</text>
+<rect x="640" y="160" width="290" height="145" fill="white" stroke="#39413b" stroke-width="2"/>
+<text x="785.0" y="208.07999999999998" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="700" fill="#202421">Driver</text>
+<text x="785.0" y="239.98" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="400" fill="#202421">Master / Slave TX</text>
+<text x="785.0" y="271.88" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="400" fill="#202421">Start + completion wait</text>
+<rect x="1010" y="105" width="560" height="245" fill="none" stroke="#39413b" stroke-width="2" stroke-dasharray="8 6"/>
+<text x="1030" y="135" text-anchor="start" font-family="Arial, sans-serif" font-size="22" font-weight="700" fill="#202421">SPI DUT</text>
+<rect x="1040" y="160" width="190" height="145" fill="#f1f2f1" stroke="#39413b" stroke-width="2"/>
+<text x="1135.0" y="225.185" text-anchor="middle" font-family="Arial, sans-serif" font-size="19" font-weight="700" fill="#202421">SPI Master</text>
+<text x="1135.0" y="252.735" text-anchor="middle" font-family="Arial, sans-serif" font-size="19" font-weight="400" fill="#202421">Control + TX / RX</text>
+<rect x="1390" y="160" width="160" height="145" fill="#f1f2f1" stroke="#39413b" stroke-width="2"/>
+<text x="1470.0" y="224.8" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#202421">SPI Slave</text>
+<text x="1470.0" y="253.8" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="400" fill="#202421">TX / RX</text>
+<polyline points="310,232 360,232" fill="none" stroke="#39413b" stroke-width="2.5"/>
+<polygon points="360,232 348.0,237.0 348.0,227.0" fill="#39413b"/>
+<polyline points="590,232 640,232" fill="none" stroke="#39413b" stroke-width="2.5"/>
+<polygon points="640,232 628.0,237.0 628.0,227.0" fill="#39413b"/>
+<polyline points="930,232 1010,232" fill="none" stroke="#39413b" stroke-width="2.5"/>
+<polygon points="1010,232 998.0,237.0 998.0,227.0" fill="#39413b"/>
+<polyline points="1230,195 1390,195" fill="none" stroke="#39413b" stroke-width="2.5"/>
+<polygon points="1390,195 1378.0,200.0 1378.0,190.0" fill="#39413b"/>
+<text x="1310" y="179" text-anchor="middle" font-family="Arial, sans-serif" font-size="17" font-weight="400" fill="#202421">SS_N / SCLK</text>
+<polyline points="1230,240 1390,240" fill="none" stroke="#39413b" stroke-width="2.5"/>
+<polygon points="1390,240 1378.0,245.0 1378.0,235.0" fill="#39413b"/>
+<text x="1310" y="224" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="400" fill="#202421">MOSI</text>
+<polyline points="1390,285 1230,285" fill="none" stroke="#39413b" stroke-width="2.5"/>
+<polygon points="1230,285 1242.0,280.0 1242.0,290.0" fill="#39413b"/>
+<text x="1310" y="269" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="400" fill="#202421">MISO</text>
+<polyline points="1290,350 1290,400" fill="none" stroke="#39413b" stroke-width="2.5"/>
+<polygon points="1290,400 1285.0,388.0 1295.0,388.0" fill="#39413b"/>
+<rect x="1020" y="400" width="530" height="120" fill="white" stroke="#39413b" stroke-width="2"/>
+<text x="1285.0" y="434.46999999999997" text-anchor="middle" font-family="Arial, sans-serif" font-size="23" font-weight="700" fill="#202421">Monitor</text>
+<text x="1285.0" y="467.82" text-anchor="middle" font-family="Arial, sans-serif" font-size="23" font-weight="400" fill="#202421">Busy / Done during transfer</text>
+<text x="1285.0" y="501.16999999999996" text-anchor="middle" font-family="Arial, sans-serif" font-size="23" font-weight="400" fill="#202421">TX / RX at transfer completion</text>
+<rect x="640" y="600" width="440" height="150" fill="#f1f2f1" stroke="#39413b" stroke-width="2"/>
+<text x="860.0" y="634.63" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="700" fill="#202421">Scoreboard</text>
+<text x="860.0" y="666.53" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="400" fill="#202421">Slave RX = Master TX</text>
+<text x="860.0" y="698.43" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="400" fill="#202421">Master RX = Slave TX</text>
+<text x="860.0" y="730.3299999999999" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="400" fill="#202421">Busy / Done state checks</text>
+<rect x="1120" y="600" width="430" height="150" fill="white" stroke="#39413b" stroke-width="2"/>
+<text x="1335.0" y="666.53" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="700" fill="#202421">Coverage</text>
+<text x="1335.0" y="698.43" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="400" fill="#202421">Completed transfer observations</text>
+<polyline points="1170,520 1170,555 860,555 860,600" fill="none" stroke="#39413b" stroke-width="2.5"/>
+<polygon points="860,600 855.0,588.0 865.0,588.0" fill="#39413b"/>
+<polyline points="1430,520 1430,600" fill="none" stroke="#39413b" stroke-width="2.5"/>
+<polygon points="1430,600 1425.0,588.0 1435.0,588.0" fill="#39413b"/>
+<text x="30" y="795" text-anchor="start" font-family="Arial, sans-serif" font-size="23" font-weight="400" fill="#202421">SPI Monitor sends observations to Scoreboard and Coverage through Analysis Ports.</text></g>
+<g transform="translate(0 820)"><rect width="100%" height="100%" fill="white"/>
 <text x="30" y="45" text-anchor="start" font-family="Arial, sans-serif" font-size="30" font-weight="700" fill="#202421">I2C UVM | 7-bit address | 8-bit data</text>
 <rect x="30" y="130" width="280" height="150" fill="#f1f2f1" stroke="#39413b" stroke-width="2"/>
 <text x="170.0" y="181.69" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" font-weight="700" fill="#202421">Sequence</text>
