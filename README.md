@@ -1,4 +1,9 @@
-# Design Verification
+<a id="design-verification"></a>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/readme/header-dark.svg">
+  <img src="./assets/readme/header-light.svg" width="100%" alt="Design Verification">
+</picture>
 
 SystemVerilog·UVM으로 RTL 데이터와 프로토콜 상태를 자동 비교하고, 오류 조건을 검증한 프로젝트입니다.
 
@@ -9,6 +14,9 @@ SystemVerilog·UVM으로 RTL 데이터와 프로토콜 상태를 자동 비교�
 <a id="implemented-techniques"></a>
 <a id="continuous-integration"></a>
 <a id="portfolio-navigation"></a>
+
+
+[프로젝트 목록](#프로젝트) · [웹 포트폴리오 ↗](https://seungyeol-rtl-portfolio.azuretide33.chatgpt.site)
 
 ## 프로젝트
 
