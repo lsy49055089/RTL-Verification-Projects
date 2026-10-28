@@ -1,13 +1,27 @@
-# SPI & I2C UVM Verification
+# SPI · I2C UVM Verification
 
-![SystemVerilog](https://img.shields.io/badge/SystemVerilog-RTL%20%2B%20TB-2f74c0)
-![UVM](https://img.shields.io/badge/UVM-1.2-7b4ab5)
-![Protocols](https://img.shields.io/badge/Protocols-SPI%20%7C%20I2C-16897a)
-![FPGA](https://img.shields.io/badge/FPGA-Basys3-d96b28)
+SPI·I2C RTL과 UVM 검증 환경을 구현해 각각 10,000건을 시험하고, SPI 파형을 Basys3에서 확인했습니다.
 
-SystemVerilog로 SPI/I2C RTL을 직접 설계하고, UVM 환경에서 자동 검증한 뒤 SPI를 Basys3 FPGA에서 실측한 프로젝트입니다.
+## 개요
 
-## Highlights
+| 항목 | 내용 |
+|---|---|
+| 기술 | SystemVerilog · UVM 1.2 · VCS · Verdi · Basys3 |
+| 검증 조건 | 2026.10.19–20 · VCS W-2024.09-SP2 · seed 1234 |
+
+
+## 담당 역할
+
+- SPI Mode 0 Master/Slave와 I2C Master/Slave RTL 구현
+- UVM Sequence·Driver·Scoreboard·Coverage 구성, SPI Monitor와 I2C 완료 시점 샘플링 구현
+- 정상·오류 트랜잭션 자동 비교와 SPI FPGA 파형 확인
+
+
+## 설계·구현
+
+<a id="highlights"></a>
+
+### 구현 항목
 
 | Area | Implementation |
 |---|---|
@@ -18,13 +32,20 @@ SystemVerilog로 SPI/I2C RTL을 직접 설계하고, UVM 환경에서 자동 검
 | Coverage | I2C operation, ACK/NACK, address match, R/W mode, data bins; operation × ACK / address match / R/W crosses |
 | Hardware | Basys3 Master/Slave wrappers, button debounce, LED/FND status, logic-analyzer validation |
 
-## Architecture
+<a id="architecture"></a>
+
+### 검증 환경 구조
 
 ![SPI and I2C UVM verification architecture](assets/uvm-architecture.svg)
 
 Sequence가 만든 트랜잭션을 Sequencer·Driver를 통해 DUT에 전달합니다. SPI Monitor는 완료된 전송을 수집하고, I2C Driver는 명령 완료 시점의 DUT 상태·데이터를 수집합니다. 각 결과는 Analysis Port를 통해 Scoreboard와 Coverage로 전달합니다.
 
-## Verification Scenarios
+
+## 검증 결과
+
+<a id="verification-scenarios"></a>
+
+### 검증 시나리오
 
 | Target | Stimulus | Automated Checks |
 |---|---|---|
@@ -35,7 +56,9 @@ Sequence가 만든 트랜잭션을 Sequencer·Driver를 통해 DUT에 전달합�
 | I2C write-read | 1 directed case + 2,499 randomized cases = **2,500 transactions** | Write/read data checks; STOP then START (not repeated START) |
 | I2C wrong address | 1 directed case + 2,499 randomized cases = **2,500 transactions** | Address mismatch and NACK |
 
-## Results
+<a id="results"></a>
+
+### 검증 요약
 
 **SPI·I2C 자동 검증**
 
@@ -59,27 +82,21 @@ SPI **38 PASS / 0 FAIL**, I2C **7 PASS / 0 FAIL**입니다. I2C는 Directed Tran
 
 **실행 자료:** VCS 원본 로그 `spi_10k.log`·`i2c_10k.log`는 별도 보관하며 저장소에는 포함하지 않았습니다. GitHub Actions에서는 DUT elaboration을 검사합니다. UVM 검증은 아래 VCS 명령으로 실행하며, Basys3의 SPI 파형은 Logic Analyzer로 확인했습니다.
 
-## Troubleshooting Applied
+<a id="troubleshooting-applied"></a>
+
+### 문제 해결
 
 - Stabilized FPGA SPI decoding by changing the board clock divider from `8'd4` to `8'd100`.
 - Fixed the first MISO-bit timing by presenting `tx_data[7]` immediately when `SS_N` falls.
 - Implemented I2C SDA as open drain: logic `1` releases the line to `Z`; logic `0` drives it low.
 - Delayed SPI monitor sampling by `#1` after the start edge to observe RTL nonblocking-assignment updates correctly.
 
-## Repository Structure
 
-```text
-.
-├── rtl
-│   ├── spi          # SPI Master, Slave and simulation loopback
-│   └── i2c          # I2C Master, Slave and connected top
-├── fpga             # Basys3 demo wrappers, control IP and FND display
-├── tb               # SPI and I2C UVM testbenches
-├── sim              # Compile-order file lists
-└── assets           # Portfolio architecture diagram
-```
+## 실행 방법
 
-## Run
+<a id="run"></a>
+
+### VCS 실행
 
 From `uvm-spi-i2c-verification/` on a machine with VCS/UVM 1.2, compile the checked-in sources and run each regression separately:
 
@@ -97,10 +114,30 @@ vcs -full64 -sverilog -timescale=1ns/1ps -ntb_opts uvm-1.2 \
 
 The SV testbenches gate FSDB generation on `+DUMP_FSDB`, so the commands above do not request waveform dumps. If enabled, the setup needs compatible Verdi FSDB PLI. Simulator/version/tool licensing may affect reproducibility. Review the final Scoreboard and UVM report summaries; do not treat successful compilation as proof of PASS.
 
-## 검증 조건
+### 검증 조건
 
 - SPI is limited to one Master, one Slave and Mode 0.
 - I2C does not yet cover multi-master arbitration, clock stretching, multiple Slaves or external sensors.
 - SVA protocol properties, code coverage, SPI의 다른 CPOL/CPHA 모드와 I2C repeated START는 검증 범위에 포함하지 않았습니다.
 
+<a id="repository-structure"></a>
 
+### 디렉터리
+
+```text
+.
+├── rtl
+│   ├── spi          # SPI Master, Slave and simulation loopback
+│   └── i2c          # I2C Master, Slave and connected top
+├── fpga             # Basys3 demo wrappers, control IP and FND display
+├── tb               # SPI and I2C UVM testbenches
+├── sim              # Compile-order file lists
+└── assets           # Portfolio architecture diagram
+```
+
+
+---
+
+[웹 포트폴리오](https://seungyeol-rtl-portfolio.azuretide33.chatgpt.site) · [GitHub 프로필](https://github.com/lsy49055089)
+
+[논문](https://github.com/lsy49055089/Parallel-Decision-Tree-Hardware) · [RTL / FPGA Design](https://github.com/lsy49055089/RTL-Design-Projects) · [Design Verification](https://github.com/lsy49055089/RTL-Verification-Projects) · [Embedded Systems](https://github.com/lsy49055089/Embedded-Systems-Projects) · [AI / CV](https://github.com/lsy49055089/AI-Projects)

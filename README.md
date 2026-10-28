@@ -1,63 +1,56 @@
-# Design Verification Projects
+# Design Verification
 
-SystemVerilog와 UVM을 사용해 RTL 기능과 프로토콜 동작을 검증한 프로젝트를 정리한 포트폴리오 저장소입니다.
+SystemVerilog·UVM으로 RTL 데이터와 프로토콜 상태를 자동 비교하고, 오류 조건을 검증한 프로젝트입니다.
 
-**Portfolio focus:** self-checking testbench · UVM · scoreboard · functional coverage
 
-[![Verification RTL CI](https://github.com/lsy49055089/RTL-Verification-Projects/actions/workflows/rtl-ci.yml/badge.svg)](https://github.com/lsy49055089/RTL-Verification-Projects/actions/workflows/rtl-ci.yml)
+<a id="design-verification-projects"></a>
+<a id="projects"></a>
+<a id="verified-results"></a>
+<a id="implemented-techniques"></a>
+<a id="continuous-integration"></a>
+<a id="portfolio-navigation"></a>
 
-> **Related Conference Paper Verification:** [Parallel Decision Tree Hardware](https://github.com/lsy49055089/Parallel-Decision-Tree-Hardware) — 37개 벡터의 기대 Class와 DONE-state assertion을 확인하고, 직접 설계한 두 FSM의 분류 결과 동등성을 자동 검증합니다.
+## 프로젝트
 
-## Projects
-
-| Project | Verification Target | Key Techniques |
+| 프로젝트 | 담당 역할 | 주요 구현·결과 |
 |---|---|---|
-| [SPI & I2C UVM Verification](./uvm-spi-i2c-verification) | SPI Mode 0, I2C Write/Read/ACK/NACK, FPGA 실측 | UVM 1.2, factory, config DB, analysis port, scoreboard, functional coverage |
-| [UART + FIFO + Parity Verification](./systemverilog-uart-fifo-verification) | UART RX/TX, dual FIFO, Odd Parity, error blocking | Class-based TB, mailbox, virtual interface, random stimulus, scoreboard |
+| [SPI · I2C UVM Verification](./uvm-spi-i2c-verification) | SPI/I2C RTL·UVM·Scoreboard·Coverage | 각각 10,000건·0 FAIL, I2C Functional Coverage 83.33% |
+| [UART · FIFO · Parity Verification](./systemverilog-uart-fifo-verification) | UART/FIFO RTL·Class-based TB·오류 주입 | FIFO 순서·Loopback 비교, Parity 오류 검출·전송 차단 |
 
-## Verified Results
+## 검증 결과
 
-**검증 환경·출처:** Synopsys VCS W-2024.09-SP2 / UVM 1.2 · 2026-10-19~20 추가 검증 (seed 1234, 당시 실행 로그 기준).
+검증 조건 · 2026.10.19–20 · VCS W-2024.09-SP2 · UVM 1.2 · seed 1234
 
-- **SPI UVM:** **10,000 Transactions / 10,000 Scoreboard PASS / 0 FAIL** (Directed 8 + Random 9,992)
-- **I2C UVM:** **10,000 Transactions / 17,500 Scoreboard PASS Checks / 0 FAIL**, Functional Coverage **83.33%** (정의한 커버리지 Bin 기준; Cross 3개 항목 각각 50%)
-- **과거 제출 결과:** SPI 38 PASS, I2C 7 PASS (2026-06, 확장 전)
-- **UART/FIFO:** random stimulus, parity-error injection, reference queue 기반 자동 비교
+| 항목 | SPI | I2C |
+|---|---|---|
+| 트랜잭션 | 10,000건 | 10,000건 |
+| Scoreboard 검사 | 10,000 PASS / 0 FAIL | 17,500 PASS / 0 FAIL |
+| 입력 조건 | Directed 8 + Random 9,992 | WRITE / READ / WR_RD / WRONG_ADDR 각각 2,500회 |
+| Functional Coverage | 수치 미기재 | 83.33% · Coverpoint 6개 100%, Cross 3개 각각 50% |
 
-## Implemented Techniques
+I2C는 한 트랜잭션에서 여러 항목을 검사하므로 트랜잭션 수와 검사 수가 다릅니다. AXI4-Lite 프로젝트의 SPI 32/32·I2C 30/30 시험은 별도 환경의 결과입니다.
 
-- UVM Sequence Item, Sequence, Sequencer, Driver, Monitor, Agent, Environment, Test
-- Factory, Phase/Objection, Config DB 기반 virtual interface 전달
-- Analysis Port/Imp 기반 Scoreboard·Coverage 연결 (SPI Monitor 수집, I2C Driver 완료 시점 샘플링)
-- I2C ACK/NACK, Address Match, R/W, Data 및 cross functional coverage
-- Class-based Transaction, Generator, Driver, Monitor, Scoreboard
-- Typed mailbox, event, virtual interface 기반 component synchronization
-- Queue/reference data 기반 자동 PASS/FAIL 비교
-- Reset immediate assertion 및 waveform timing 분석
+## 검증·실행
 
-각 프로젝트 폴더에는 DUT, testbench, 검증 시나리오, 결과와 재현 시 주의사항을 정리했습니다.
+- **SPI:** Monitor가 완료된 전송을 수집해 Scoreboard와 Coverage로 전달합니다.
+- **I2C:** Driver가 명령 완료 시점의 DUT 상태·데이터를 수집해 Scoreboard와 Coverage로 전달합니다.
+- **UART/FIFO:** Class·Virtual Interface·Mailbox·Event로 구성한 테스트벤치에서 Queue·기대값과 DUT 결과를 비교합니다.
 
-
-## Continuous Integration
-
-GitHub Actions에서 Icarus Verilog로 SPI, I2C, UART/FIFO DUT의 SystemVerilog elaboration을 자동 검사합니다.
+GitHub Actions는 Icarus Verilog로 DUT의 구문과 모듈 연결(elaboration)을 검사합니다.
 
 ```bash
 bash scripts/check_rtl.sh
 ```
 
-**CI 검사 범위:** SPI·I2C·UART/FIFO DUT의 구문과 모듈 연결.
+UVM 시뮬레이션에는 VCS/UVM 1.2가 필요합니다. 10,000건 실행의 VCS 원본 로그는 별도 보관하며 저장소에는 포함하지 않았습니다. CI 검사는 UVM 트랜잭션 시험과 구분합니다.
 
-| Evidence | 확인할 수 있는 범위 |
-|---|---|
-| [SPI/I2C 검증 시나리오와 실행 명령](./uvm-spi-i2c-verification#run) | 공개된 DUT·UVM TB를 VCS/UVM 1.2 환경에서 실행하는 방법 |
-| [UART/FIFO Simulation Sets](./systemverilog-uart-fifo-verification#simulation-sets) | FIFO, UART, 통합 Loopback의 개별 컴파일 구성 |
-| [CI 실행 기록](https://github.com/lsy49055089/RTL-Verification-Projects/actions/workflows/rtl-ci.yml) | SPI·I2C·UART/FIFO DUT의 elaboration 성공 여부 |
+- [SPI/I2C 실행 명령과 검증 조건](./uvm-spi-i2c-verification#run)
+- [UART/FIFO 시뮬레이션 구성](./systemverilog-uart-fifo-verification#simulation-sets)
+- [CI 실행 기록](https://github.com/lsy49055089/RTL-Verification-Projects/actions/workflows/rtl-ci.yml)
 
-**UVM 재현 환경:** VCS/UVM 1.2가 필요합니다. 10,000건 검증 실행 로그는 사용자 Linux 서버에 보관되어 있으며 이 저장소에는 포함하지 않습니다. CI 성공은 UVM 10,000건 실행을 의미하지 않습니다. 명령과 검증 범위는 [프로젝트 README](./uvm-spi-i2c-verification#run)를 확인하세요.
 
 ---
 
-## Portfolio Navigation
+[웹 포트폴리오](https://seungyeol-rtl-portfolio.azuretide33.chatgpt.site) · [GitHub 프로필](https://github.com/lsy49055089)
 
-[Conference Paper](https://github.com/lsy49055089/Parallel-Decision-Tree-Hardware) · [RTL / FPGA Design](https://github.com/lsy49055089/RTL-Design-Projects) · [Design Verification](https://github.com/lsy49055089/RTL-Verification-Projects) · [Embedded Systems](https://github.com/lsy49055089/Embedded-Systems-Projects) · [Edge AI / CV](https://github.com/lsy49055089/AI-Projects)
+[논문](https://github.com/lsy49055089/Parallel-Decision-Tree-Hardware) · [RTL / FPGA Design](https://github.com/lsy49055089/RTL-Design-Projects) · [Design Verification](https://github.com/lsy49055089/RTL-Verification-Projects) · [Embedded Systems](https://github.com/lsy49055089/Embedded-Systems-Projects) · [AI / CV](https://github.com/lsy49055089/AI-Projects)
